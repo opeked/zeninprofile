@@ -42,36 +42,49 @@ const DB = {
     else if(/Linux/.test(ua)) os = 'Linux';
 
     const now = new Date();
-    const basicEntry = {
+
+    const entry = {
       time: now.toLocaleString('pt-BR'),
       page: page || 'Início',
       browser,
       os,
       lang: navigator.language || '—',
       screen: window.screen.width + '×' + window.screen.height,
-      ip: '—',
+      ip: 'Carregando...',
       location: '—'
     };
 
-    // Captura de IP + Localização
-    fetch('https://api.ipify.org?format=json')
+    // Adiciona primeiro com "Carregando..." para aparecer imediatamente
+    v.log = v.log || [];
+    v.log.unshift(entry);
+    if(v.log.length > 200) v.log = v.log.slice(0,200);
+    this.set('tg_visits', v);
+
+    // Atualiza tabela imediatamente
+    if (typeof renderDB === 'function') renderDB();
+
+    // Agora tenta pegar o IP real
+    fetch('https://api.ipify.org?format=json', { timeout: 5000 })
       .then(res => res.json())
       .then(data => {
-        const ip = data.ip || '—';
-        basicEntry.ip = ip;
+        entry.ip = data.ip || '—';
 
-        return fetch(`https://ipapi.co/${ip}/json/`);
+        return fetch(`https://ipapi.co/${entry.ip}/json/`, { timeout: 5000 });
       })
       .then(res => res.json())
       .then(loc => {
-        basicEntry.location = `${loc.city || ''}, ${loc.country_name || ''}`.trim() || 'Desconhecido';
-        this.saveVisitEntry(basicEntry, v);
+        entry.location = `${loc.city || ''}, ${loc.country_name || ''}`.trim() || 'Desconhecido';
+        this.set('tg_visits', v);
+        if (typeof renderDB === 'function') renderDB();
       })
       .catch(() => {
-        this.saveVisitEntry(basicEntry, v);
+        entry.ip = '—';
+        entry.location = '—';
+        this.set('tg_visits', v);
+        if (typeof renderDB === 'function') renderDB();
       });
   },
-
+   
   saveVisitEntry(entry, v){
     v.log = v.log || [];
     v.log.unshift(entry);

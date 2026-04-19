@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legado — THRAGG</title>
+<style id="shared-inject"></style>
+<style>
+.legado-hero{position:relative;height:80vh;min-height:560px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+.legado-glow{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(100,0,20,.2) 0%,transparent 65%),linear-gradient(180deg,var(--void) 0%,var(--deep) 50%,var(--void) 100%)}
+.blade{position:absolute;left:0;right:0;height:1px}
+.blade::before{content:'';display:block;height:1px;background:linear-gradient(90deg,transparent 5%,rgba(180,0,20,.5) 25%,rgba(240,60,30,1) 50%,rgba(180,0,20,.5) 75%,transparent 95%)}
+.blade.t{top:10%}.blade.b{bottom:10%}
+.pip{position:absolute;left:50%;top:10%;transform:translate(-50%,-50%);width:9px;height:9px;background:var(--fire);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);animation:pip-pulse 3s ease-in-out infinite;z-index:4}
+.pip.b{top:auto;bottom:10%;transform:translate(-50%,50%)}
+.plate{position:absolute;pointer-events:none;z-index:4}
+.plate.tl{top:0;left:0}.plate.tr{top:0;right:0;transform:scaleX(-1)}
+.plate.bl{bottom:0;left:0;transform:scaleY(-1)}.plate.br{bottom:0;right:0;transform:scale(-1,-1)}
+.hero-content{position:relative;z-index:10}
+.hero-eyebrow{font-family:'Orbitron',sans-serif;font-size:.52rem;letter-spacing:.9em;color:var(--crimson);text-transform:uppercase;margin-bottom:2.4rem;display:flex;align-items:center;gap:1.6rem;opacity:0;animation:rise .9s ease .3s forwards}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:55px;height:1px;background:linear-gradient(90deg,transparent,var(--crimson))}
+.hero-eyebrow::after{transform:scaleX(-1)}
+.hero-name{font-family:'Cinzel Decorative',serif;font-size:clamp(3.5rem,10vw,8rem);font-weight:900;line-height:.88;letter-spacing:.06em;color:transparent;background:linear-gradient(155deg,#FFF8E0 0%,var(--pale) 15%,var(--gold3) 30%,var(--gold2) 42%,#FFF5D0 50%,var(--gold2) 58%,var(--gold3) 70%,var(--pale) 85%,#FFF8E0 100%);background-size:250% auto;-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 50px rgba(200,154,24,.4));opacity:0;animation:name-in 1.6s cubic-bezier(.1,1,.2,1) .5s forwards,gold-flow 7s linear 2.5s infinite}
+.hero-divider{display:flex;align-items:center;gap:1.2rem;margin:2rem auto;width:fit-content;opacity:0;animation:rise .8s ease 1.6s forwards}
+.hd-line{height:1px;background:linear-gradient(90deg,transparent,var(--gold2),transparent)}
+.hd-line.long{width:160px}.hd-line.short{width:50px}
+.hd-gem{width:8px;height:8px;background:var(--gold3);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%)}
+.hero-sub{font-family:'Cinzel',serif;font-size:clamp(.6rem,1.3vw,.78rem);letter-spacing:.4em;color:var(--muted);text-transform:uppercase;line-height:2.4;opacity:0;animation:rise .8s ease 2s forwards}
+
+/* POWER STRIP */
+.power-strip{position:relative;overflow:hidden;background:linear-gradient(90deg,var(--abyss),var(--deep) 20%,var(--deep2) 50%,var(--deep) 80%,var(--abyss));border-top:1px solid rgba(204,16,32,.5);border-bottom:1px solid rgba(204,16,32,.5);padding:0 2rem;display:flex;align-items:stretch}
+.power-strip::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(150,0,10,.12) 50%,transparent);background-size:200%;animation:sweep 5s linear infinite}
+.ps-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.6rem .8rem;position:relative;border-right:1px solid rgba(120,0,0,.3)}
+.ps-item:last-child{border-right:none}
+.ps-num{font-family:'Cinzel',serif;font-size:1.6rem;font-weight:700;color:var(--gold3);letter-spacing:.04em;line-height:1;text-shadow:0 0 20px rgba(232,184,48,.3)}
+.ps-label{font-family:'Orbitron',sans-serif;font-size:.36rem;letter-spacing:.42em;color:var(--dim);text-transform:uppercase;margin-top:.5rem;text-align:center}
+
+/* LORE SECTION */
+.lore-section{position:relative;padding:7rem 2rem;overflow:hidden;background:linear-gradient(180deg,var(--void),var(--deep) 25%,var(--deep2) 50%,var(--deep) 75%,var(--void))}
+.lore-bg-rune{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cinzel Decorative',serif;font-size:28rem;font-weight:900;color:rgba(100,0,0,.04);pointer-events:none;user-select:none;line-height:1}
+.lore-wrap{max-width:1140px;margin:0 auto;position:relative;z-index:1}
+.lore-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:rgba(120,0,0,.18);border:1px solid rgba(120,0,0,.2)}
+.lc{background:var(--abyss);padding:2.6rem 2.2rem;position:relative;overflow:hidden;transition:background .35s}
+.lc:hover{background:var(--deep)}
+.lc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--blood2),var(--crimson),var(--blood2),transparent);opacity:0;transition:opacity .35s}
+.lc:hover::before{opacity:1}
+.lc.hero-card{grid-row:1/3;background:linear-gradient(155deg,var(--deep2),var(--deep),var(--abyss));border-right:1px solid rgba(180,0,20,.2)}
+.lc.hero-card::before{opacity:.5}
+.lc-n{font-family:'Cinzel',serif;font-size:5rem;font-weight:900;color:rgba(120,0,0,.18);line-height:1;letter-spacing:-.02em;display:block;margin-bottom:.6rem}
+.lc.hero-card .lc-n{font-size:8rem;color:rgba(120,0,0,.13)}
+.lc-t{font-family:'Cinzel',serif;font-size:.78rem;font-weight:700;letter-spacing:.22em;color:var(--gold3);text-transform:uppercase;margin-bottom:.9rem}
+.lc.hero-card .lc-t{font-size:.92rem}
+.lc-bar{width:35px;height:1.5px;background:var(--blood2);margin-bottom:1.1rem;transition:width .35s}
+.lc:hover .lc-bar{width:65px}
+.lc-p{font-family:'Cormorant Garamond',serif;font-size:.92rem;font-style:italic;line-height:1.95;color:var(--muted);letter-spacing:.02em}
+.lc.hero-card .lc-p{font-size:1rem}
+
+/* QUOTE */
+.quote-section{position:relative;padding:8rem 2rem;text-align:center;overflow:hidden;background:linear-gradient(180deg,var(--void),var(--abyss) 30%,var(--abyss) 70%,var(--void))}
+.quote-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 65% 70% at 50% 50%,rgba(120,0,20,.18),transparent 70%)}
+.q-mark{font-family:'Cinzel Decorative',serif;font-size:12rem;line-height:.4;color:rgba(120,0,0,.18);display:block;margin-bottom:2rem;animation:float-q 7s ease-in-out infinite}
+.q-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.3rem,3.5vw,2.3rem);font-weight:300;line-height:1.75;color:var(--text);max-width:860px;margin:0 auto 2.8rem;letter-spacing:.02em;position:relative;z-index:1}
+.q-text strong{font-style:normal;font-weight:600;color:var(--gold3)}
+.q-text em{font-style:normal;color:var(--crimson)}
+.q-attr{font-family:'Orbitron',sans-serif;font-size:.46rem;letter-spacing:.75em;color:var(--dim);text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:1.2rem;position:relative;z-index:1}
+.q-attr::before,.q-attr::after{content:'';display:block;width:70px;height:1px;background:var(--blood)}
+@media(max-width:760px){.lore-grid{grid-template-columns:1fr}.lc.hero-card{grid-row:auto;border-right:none}.power-strip{flex-wrap:wrap}.ps-item{min-width:33%;border-right:none;border-bottom:1px solid rgba(120,0,0,.3)}}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div id="nav-mount"></div>
+
+<div class="page-wrap">
+  <section class="legado-hero">
+    <div class="legado-glow"></div>
+    <div class="blade t"></div><div class="blade b"></div>
+    <div class="pip"></div><div class="pip b"></div>
+    <div class="plate tl"><svg width="90" height="90" viewBox="0 0 90 90"><polyline points="0,65 0,0 65,0" fill="none" stroke="#A87808" stroke-width="1.5" opacity=".6"/><polyline points="0,35 0,0 35,0" fill="none" stroke="#C89A18" stroke-width="2.5" opacity=".7"/></svg></div>
+    <div class="plate tr"><svg width="90" height="90" viewBox="0 0 90 90"><polyline points="0,65 0,0 65,0" fill="none" stroke="#A87808" stroke-width="1.5" opacity=".6"/><polyline points="0,35 0,0 35,0" fill="none" stroke="#C89A18" stroke-width="2.5" opacity=".7"/></svg></div>
+    <div class="plate bl"><svg width="90" height="90" viewBox="0 0 90 90"><polyline points="0,65 0,0 65,0" fill="none" stroke="#A87808" stroke-width="1.5" opacity=".6"/><polyline points="0,35 0,0 35,0" fill="none" stroke="#C89A18" stroke-width="2.5" opacity=".7"/></svg></div>
+    <div class="plate br"><svg width="90" height="90" viewBox="0 0 90 90"><polyline points="0,65 0,0 65,0" fill="none" stroke="#A87808" stroke-width="1.5" opacity=".6"/><polyline points="0,35 0,0 35,0" fill="none" stroke="#C89A18" stroke-width="2.5" opacity=".7"/></svg></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Dossier Imperial · O Grão-Regente</div>
+      <h1 class="hero-name">LEGADO</h1>
+      <div class="hero-divider"><div class="hd-line long"></div><div class="hd-gem"></div><div class="hd-line short"></div><div class="hd-gem"></div><div class="hd-line long"></div></div>
+      <p class="hero-sub">A História do Mais Poderoso Ser do Universo</p>
+    </div>
+  </section>
+
+  <div class="power-strip">
+    <div class="ps-item"><span class="ps-num">∞</span><span class="ps-label">Anos de Vida</span></div>
+    <div class="ps-item"><span class="ps-num">5.000</span><span class="ps-label">Anos de Reinado</span></div>
+    <div class="ps-item"><span class="ps-num">10M+</span><span class="ps-label">Planetas Subjugados</span></div>
+    <div class="ps-item"><span class="ps-num">Ⅰ</span><span class="ps-label">Grão-Regente</span></div>
+    <div class="ps-item"><span class="ps-num">100%</span><span class="ps-label">Sangue Viltrumita</span></div>
+  </div>
+
+  <section class="lore-section">
+    <div class="lore-bg-rune">V</div>
+    <div class="lore-wrap">
+      <div class="s-tag" style="margin-bottom:1rem">O Legado Imperial</div>
+      <h2 class="s-title">Quem é Thragg</h2>
+      <div class="lore-grid">
+        <div class="lc hero-card">
+          <span class="lc-n">Ⅰ</span><div class="lc-t">O Último Rei</div><div class="lc-bar"></div>
+          <p class="lc-p">Thragg não nasceu apenas como um guerreiro — nasceu como a encarnação do destino Viltrumita. Descendente direto do Rei Argall, manteve sua linhagem real em segredo absoluto por séculos enquanto governava como Grão-Regente.<br><br>Com força que supera qualquer outro Viltrumita, ele representa a perfeição biológica de uma raça que passou milênios erradicando qualquer fraqueza de seu gene-pool.<br><br>Ele não governa com medo — governa com certeza. A certeza de que nenhuma força no universo pode detê-lo.</p>
+        </div>
+        <div class="lc"><span class="lc-n">Ⅱ</span><div class="lc-t">Combate Supremo</div><div class="lc-bar"></div><p class="lc-p">Derrotou Omni-Man em combate singular. Nenhum ser sobreviveu a um encontro direto com Thragg em plena capacidade de força.</p></div>
+        <div class="lc"><span class="lc-n">Ⅲ</span><div class="lc-t">Guardião da Raça</div><div class="lc-bar"></div><p class="lc-p">Quando o Império entrou em colapso, Thragg preservou a linhagem pura. Seus filhos — os Thraxans — são a nova geração do domínio cósmico.</p></div>
+        <div class="lc"><span class="lc-n">Ⅳ</span><div class="lc-t">Estrategista Frio</div><div class="lc-bar"></div><p class="lc-p">Manipulou o próprio Omni-Man, a Coalisão de Planetas e o Invincible por décadas. Por trás dos punhos existe um intelecto de aço.</p></div>
+        <div class="lc"><span class="lc-n">Ⅴ</span><div class="lc-t">Imortal de Fato</div><div class="lc-bar"></div><p class="lc-p">Viltrumitas cessam de envelhecer em sua plenitude física. Thragg existirá enquanto houver universo — tornando-se mais inevitável a cada século.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="quote-section">
+    <span class="q-mark">"</span>
+    <blockquote class="q-text">Somos <em>Viltrumitas</em>.<br>Cada planeta que conquistamos é nosso por direito.<br>Cada raça que dobra o joelho confirma<br>o que sempre foi verdade:<br><strong>o universo pertence aos fortes.</strong></blockquote>
+    <div class="q-attr">Thragg · Grão-Regente · Viltrum</div>
+  </div>
+
+  <footer class="site-footer">
+    <span class="ft-logo">THRAGG</span>
+    <div class="ft-sub">Legado Imperial · Viltrum · Eterno</div>
+  </footer>
+</div>
+
+<script src="thragg_data.js"></script>
+<script>
+document.getElementById('shared-inject').textContent = SHARED_CSS;
+document.getElementById('nav-mount').innerHTML = renderNav('legado');
+initBgCanvas();
+DB.bumpVisit('Legado');
+</script>
+</body>
+</html>

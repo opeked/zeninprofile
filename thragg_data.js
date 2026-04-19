@@ -6,11 +6,17 @@
 
 const DB = {
   /* ── RAW STORAGE ── */
-  get(key){ try{ return JSON.parse(localStorage.getItem(key)) } catch{ return null } },
-  set(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)) } catch{} },
+  get(key){ 
+    try{ return JSON.parse(localStorage.getItem(key)) } catch{ return null } 
+  },
+  set(key, val){ 
+    try{ localStorage.setItem(key, JSON.stringify(val)) } catch{} 
+  },
 
   /* ── VISITS ── */
-  getVisits(){ return this.get('tg_visits') || { total:0, today:0, todayKey:'', days:{}, log:[] } },
+  getVisits(){ 
+    return this.get('tg_visits') || { total:0, today:0, todayKey:'', days:{}, log:[] } 
+  },
   bumpVisit(page){
     const v = this.getVisits();
     const dk = new Date().toISOString().slice(0,10);
@@ -20,30 +26,31 @@ const DB = {
     if(v.todayKey !== dk){ v.today = 0; v.todayKey = dk; }
     v.today = (v.today||0) + 1;
 
-    /* anonymous visitor record — browser family + time only */
     const ua = navigator.userAgent;
     let browser = 'Desconhecido';
-    if(/Edg/.test(ua))      browser = 'Edge';
+    if(/Edg/.test(ua)) browser = 'Edge';
     else if(/OPR|Opera/.test(ua)) browser = 'Opera';
-    else if(/Chrome/.test(ua))   browser = 'Chrome';
-    else if(/Firefox/.test(ua))  browser = 'Firefox';
-    else if(/Safari/.test(ua))   browser = 'Safari';
+    else if(/Chrome/.test(ua)) browser = 'Chrome';
+    else if(/Firefox/.test(ua)) browser = 'Firefox';
+    else if(/Safari/.test(ua)) browser = 'Safari';
 
     let os = 'Desconhecido';
-    if(/Windows/.test(ua))      os = 'Windows';
+    if(/Windows/.test(ua)) os = 'Windows';
     else if(/Android/.test(ua)) os = 'Android';
     else if(/iPhone|iPad/.test(ua)) os = 'iOS';
-    else if(/Mac/.test(ua))     os = 'macOS';
-    else if(/Linux/.test(ua))   os = 'Linux';
+    else if(/Mac/.test(ua)) os = 'macOS';
+    else if(/Linux/.test(ua)) os = 'Linux';
 
     const now = new Date();
     const entry = {
       time: now.toLocaleString('pt-BR'),
       page: page || 'Início',
-      browser, os,
+      browser, 
+      os,
       lang: navigator.language || '—',
-      screen: window.screen.width+'×'+window.screen.height,
+      screen: window.screen.width + '×' + window.screen.height,
     };
+
     v.log = v.log || [];
     v.log.unshift(entry);
     if(v.log.length > 200) v.log = v.log.slice(0,200);
@@ -55,57 +62,113 @@ const DB = {
 
   /* ── PLAY COUNTS ── */
   getPlays(){ return this.get('tg_plays') || { audio:0, video:0 } },
-  bumpPlay(type){ const p=this.getPlays(); p[type]=(p[type]||0)+1; this.set('tg_plays',p); },
-  resetPlays(){ this.set('tg_plays',{audio:0,video:0}); },
+  bumpPlay(type){ 
+    const p = this.getPlays(); 
+    p[type] = (p[type]||0) + 1; 
+    this.set('tg_plays', p); 
+  },
+  resetPlays(){ 
+    this.set('tg_plays', {audio:0, video:0}); 
+  },
 
   /* ── ACTIVITY LOG ── */
   getLog(){ return this.get('tg_log') || [] },
   log(msg, type='info'){
     const l = this.getLog();
-    l.unshift({ time: new Date().toLocaleString('pt-BR'), msg, type });
+    l.unshift({ 
+      time: new Date().toLocaleString('pt-BR'), 
+      msg, 
+      type 
+    });
     if(l.length > 300) l.pop();
     this.set('tg_log', l);
   },
   clearLog(){ this.set('tg_log', []); },
 
   /* ── CREDENTIALS ── */
-  /* Master credentials — hardcoded */
-  MASTER: { user:'Zenin', pass:'supremoregente@2026', role:'Grão-Regente', master:true },
+  MASTER: { 
+    user: 'Zenin', 
+    pass: 'supremoregente@2026', 
+    role: 'Grão-Regente', 
+    master: true 
+  },
 
-  getCreds(){ return this.get('tg_creds') || [] },
+  getCreds(){ 
+    return this.get('tg_creds') || [] 
+  },
+
   addCred(user, pass, label){
     const list = this.getCreds();
-    list.push({ user, pass, label, role:'Convidado', created: new Date().toLocaleString('pt-BR'), active:true });
+    list.push({ 
+      user: user.trim(), 
+      pass: pass.trim(), 
+      label: label || 'Sem apelido', 
+      role: 'Convidado', 
+      created: new Date().toLocaleString('pt-BR'), 
+      active: true 
+    });
     this.set('tg_creds', list);
   },
+
   revokeCred(user){
-    const list = this.getCreds().map(c => c.user===user ? {...c, active:false} : c);
+    const list = this.getCreds().map(c => 
+      c.user === user ? {...c, active: false} : c
+    );
     this.set('tg_creds', list);
   },
+
   deleteCred(user){
     const list = this.getCreds().filter(c => c.user !== user);
     this.set('tg_creds', list);
   },
+
+  /* === FUNÇÃO CORRIGIDA === */
   checkLogin(user, pass){
-    if(user === this.MASTER.user && pass === this.MASTER.pass) return { ok:true, ...this.MASTER };
-    const found = this.getCreds().find(c => c.user===user && c.pass===pass && c.active);
-    if(found) return { ok:true, ...found };
-    return { ok:false };
+    if(!user || !pass) return { ok: false };
+
+    const u = user.trim();
+    const p = pass.trim();
+
+    // Login Master
+    if(u === this.MASTER.user && p === this.MASTER.pass) {
+      return { ok: true, ...this.MASTER };
+    }
+
+    // Login com credenciais geradas
+    const creds = this.getCreds() || [];
+    const found = creds.find(c => 
+      c.user === u && 
+      c.pass === p && 
+      c.active === true
+    );
+
+    if(found) {
+      return { ok: true, ...found };
+    }
+
+    return { ok: false };
   },
 
   /* ── CONTENT ── */
   getContent(){ return this.get('tg_content') || {} },
-  saveContent(obj){ this.set('tg_content', { ...this.getContent(), ...obj }); },
+  saveContent(obj){ 
+    this.set('tg_content', { ...this.getContent(), ...obj }); 
+  },
 };
 
 /* ── GENERATE RANDOM CREDENTIAL ── */
 function generateCredential(label){
-  const adj = ['Ferro','Aço','Sangue','Chama','Sombra','Ferro','Viltrum','Eterno','Supremo','Cinza'];
-  const noun= ['Guerreiro','Soldado','Regente','Lâmina','Escudo','Punho','Império','Estrela','Corvo','Lobo'];
-  const user = adj[Math.floor(Math.random()*adj.length)] + noun[Math.floor(Math.random()*noun.length)] + Math.floor(10+Math.random()*89);
+  const adj = ['Ferro','Aço','Sangue','Chama','Sombra','Viltrum','Eterno','Supremo','Cinza','Imperial'];
+  const noun = ['Guerreiro','Soldado','Regente','Lâmina','Escudo','Punho','Império','Estrela','Corvo','Lobo'];
+  const user = adj[Math.floor(Math.random()*adj.length)] + 
+               noun[Math.floor(Math.random()*noun.length)] + 
+               Math.floor(10 + Math.random()*89);
+
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789@#$!';
   let pass = '';
-  for(let i=0;i<14;i++) pass += chars[Math.floor(Math.random()*chars.length)];
+  for(let i = 0; i < 14; i++) {
+    pass += chars[Math.floor(Math.random()*chars.length)];
+  }
   return { user, pass };
 }
 
@@ -122,7 +185,7 @@ function renderNav(activePage){
   <nav class="site-nav">
     <a class="nav-logo" href="thragg_hino.html">THRAGG</a>
     <div class="nav-links">
-      ${pages.map(p=>`
+      ${pages.map(p => `
         <a class="nav-link${p.id===activePage?' active':''}${p.special?' nav-admin':''}" href="${p.href}">${p.label}</a>
       `).join('')}
     </div>
@@ -130,7 +193,7 @@ function renderNav(activePage){
   </nav>`;
 }
 
-/* ── SHARED STYLES (nav + base) ── */
+/* ── SHARED STYLES ── */
 const SHARED_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Orbitron:wght@400;600;900&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -144,7 +207,6 @@ html{scroll-behavior:smooth}
 body{background:var(--void);color:var(--text);font-family:'Cormorant Garamond',serif;overflow-x:hidden;min-height:100vh}
 #bg-canvas{position:fixed;inset:0;pointer-events:none;z-index:0}
 body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.05) 2px,rgba(0,0,0,.05) 4px);pointer-events:none;z-index:9999}
-
 /* NAV */
 .site-nav{position:fixed;top:0;left:0;right:0;z-index:8000;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2.5rem;background:linear-gradient(180deg,rgba(2,0,8,.97),rgba(2,0,8,.75));border-bottom:1px solid rgba(170,0,16,.35);backdrop-filter:blur(10px)}
 .nav-logo{font-family:'Cinzel Decorative',serif;font-size:1rem;font-weight:900;letter-spacing:.2em;color:transparent;background:linear-gradient(90deg,var(--gold2),var(--gold3),var(--gold2));-webkit-background-clip:text;background-clip:text;text-decoration:none}
@@ -157,22 +219,15 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .nav-admin:hover,.nav-admin.active{color:var(--crimson)!important;background:rgba(200,16,32,.1)!important}
 .nav-visits{font-family:'Orbitron',sans-serif;font-size:.38rem;letter-spacing:.4em;color:var(--dim);text-transform:uppercase;display:flex;align-items:center;gap:.5rem}
 .nav-visits-num{color:var(--crimson);font-size:.55rem;font-weight:600}
-
-/* PAGE WRAPPER */
 .page-wrap{padding-top:60px;min-height:100vh;position:relative;z-index:1}
-
-/* SECTION COMMONS */
 .s-tag{font-family:'Orbitron',sans-serif;font-size:.46rem;letter-spacing:.75em;color:var(--blood2);text-transform:uppercase;text-align:center;margin-bottom:.9rem;display:flex;align-items:center;justify-content:center;gap:1.2rem}
 .s-tag::before,.s-tag::after{content:'';display:block;width:30px;height:1px;background:linear-gradient(90deg,transparent,var(--blood2))}
 .s-tag::after{transform:scaleX(-1)}
 .s-title{font-family:'Cinzel',serif;font-size:clamp(1.4rem,3.5vw,2.4rem);font-weight:700;color:var(--pale);text-align:center;letter-spacing:.12em;margin-bottom:3rem;text-shadow:0 0 40px rgba(200,154,24,.2)}
-
-/* FOOTER */
 .site-footer{position:relative;padding:3rem 2rem;text-align:center;background:var(--void);border-top:1px solid rgba(120,0,0,.3);overflow:hidden}
 .site-footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--crimson),var(--gold2),var(--crimson),transparent)}
 .ft-logo{font-family:'Cinzel Decorative',serif;font-size:1.2rem;font-weight:900;letter-spacing:.15em;color:transparent;background:linear-gradient(135deg,var(--gold) 30%,var(--gold3) 60%,var(--gold) 90%);-webkit-background-clip:text;background-clip:text;display:block;margin-bottom:.5rem}
 .ft-sub{font-family:'Orbitron',sans-serif;font-size:.38rem;letter-spacing:.55em;color:var(--dim);text-transform:uppercase;line-height:2}
-
 /* ANIMATIONS */
 @keyframes spin-cw{to{transform:rotate(360deg)}}
 @keyframes spin-ccw{to{transform:rotate(-360deg)}}
@@ -185,8 +240,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 @keyframes drip{0%{height:0;opacity:1}75%{opacity:1}100%{height:60px;opacity:0}}
 @keyframes pip-pulse{0%,100%{box-shadow:0 0 12px var(--fire),0 0 30px rgba(232,48,32,.3)}50%{box-shadow:0 0 25px var(--ember),0 0 60px rgba(232,48,32,.6)}}
 `;
-
-/* ── PARTICLE BACKGROUND (shared init) ── */
+/* ── PARTICLE BACKGROUND ── */
 function initBgCanvas(){
   const cv=document.getElementById('bg-canvas');if(!cv)return;
   const cx=cv.getContext('2d');let W,H;

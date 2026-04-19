@@ -3,500 +3,1011 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zenin Profile</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<title>THRAGG — Grão-Regente de Viltrum</title>
+<link href="https://fonts.googleapis.com/css2?family=Trajan+Pro&family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Orbitron:wght@400;600;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
 :root{
-  --blood:#8B0000;
-  --blood-bright:#CC0000;
-  --crimson:#DC143C;
-  --gold:#C8990A;
-  --gold-light:#F5C842;
-  --black:#070000;
-  --dark:#120404;
-  --dark2:#1C0707;
-  --text:#F0D9C0;
-  --text-dim:#A07060;
-}
-html{scroll-behavior:smooth}
-body{
-  background:var(--black);
-  color:var(--text);
-  font-family:'Cinzel',serif;
-  overflow-x:hidden;
-  cursor:crosshair;
-}
-body::after{
-  content:'';
-  position:fixed;inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);
-  pointer-events:none;z-index:9999;
+  --void:        #04010A;
+  --abyss:       #08030F;
+  --deep:        #0E0518;
+  --deep2:       #160820;
+  --mid:         #1F0D2C;
+  --blood:       #6B0000;
+  --blood2:      #9B0000;
+  --crimson:     #C81020;
+  --fire:        #E8301A;
+  --gold:        #B8870A;
+  --gold2:       #D4A820;
+  --gold3:       #F0C840;
+  --pale:        #FFF0C0;
+  --steel:       #8090A8;
+  --text:        #E8D8C8;
+  --muted:       #907870;
+  --dim:         #605050;
 }
 
-@keyframes title-in{
-  0%{letter-spacing:1em;opacity:0;filter:blur(30px)}
-  100%{letter-spacing:.15em;opacity:1;filter:blur(0)}
-}
-@keyframes glow-gold{
-  0%,100%{text-shadow:0 0 10px var(--gold),0 0 30px rgba(200,153,10,.4)}
-  50%{text-shadow:0 0 25px var(--gold-light),0 0 60px var(--gold),0 0 100px rgba(245,200,66,.3)}
-}
-@keyframes sweep{
-  0%{transform:translateX(-40px);opacity:0}
-  100%{transform:translateX(0);opacity:1}
-}
-@keyframes bar-grow{
-  0%{transform:scaleX(0)}
-  100%{transform:scaleX(1)}
-}
-@keyframes float{
-  0%,100%{transform:translateY(0) rotate(0deg);opacity:.12}
-  50%{transform:translateY(-18px) rotate(4deg);opacity:.28}
-}
-@keyframes pulse-border{
-  0%,100%{border-color:rgba(139,0,0,.5)}
-  50%{border-color:rgba(220,20,60,.8)}
-}
-@keyframes flicker{
-  0%,94%,100%{opacity:1}
-  95%{opacity:.4}
-  97%{opacity:.9}
-  98%{opacity:.2}
-  99%{opacity:1}
-}
-@keyframes drip-line{
-  0%{height:0;opacity:1}
-  80%{opacity:1}
-  100%{height:50px;opacity:0}
-}
-@keyframes bg-pulse{
-  0%,100%{opacity:.55}
-  50%{opacity:1}
-}
-@keyframes shimmer{
-  0%{background-position:-200% center}
-  100%{background-position:200% center}
-}
-@keyframes rotate-slow{
-  from{transform:rotate(0deg)}
-  to{transform:rotate(360deg)}
-}
-@keyframes badge-in{
-  0%{transform:scale(.6);opacity:0}
-  100%{transform:scale(1);opacity:1}
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: 'Cormorant Garamond', serif;
+  overflow-x: hidden;
+  min-height: 100vh;
 }
 
-/* ─── HERO ─── */
-.hero{
-  position:relative;min-height:100vh;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;overflow:hidden;
-  padding:5rem 2rem 4rem;
+/* ── PARTICLE CANVAS ── */
+#particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .7;
 }
-.hero-bg{
-  position:absolute;inset:0;
+
+/* ── SCANLINES ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 3px,
+    rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px
+  );
+  pointer-events: none;
+  z-index: 9000;
+}
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 680px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* layered atmospheric bg */
+.hero-atm {
+  position: absolute; inset: 0; z-index: 1;
   background:
-    radial-gradient(ellipse 70% 55% at 50% 45%,rgba(139,0,0,.2) 0%,transparent 70%),
-    radial-gradient(ellipse 35% 70% at 15% 50%,rgba(90,0,0,.14) 0%,transparent 65%),
-    radial-gradient(ellipse 35% 70% at 85% 50%,rgba(90,0,0,.14) 0%,transparent 65%),
-    linear-gradient(180deg,#070000 0%,#120404 35%,#180606 65%,#070000 100%);
-  animation:bg-pulse 7s ease-in-out infinite;
-}
-.emblem-bg{
-  position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-52%);
-  width:520px;height:520px;
-  opacity:.045;
-  animation:rotate-slow 80s linear infinite;
-  pointer-events:none;
-}
-.corner{position:absolute;width:48px;height:48px;border-color:var(--gold);border-style:solid;opacity:.55}
-.corner.tl{top:2rem;left:2rem;border-width:2px 0 0 2px}
-.corner.tr{top:2rem;right:2rem;border-width:2px 2px 0 0}
-.corner.bl{bottom:2rem;left:2rem;border-width:0 0 2px 2px}
-.corner.br{bottom:2rem;right:2rem;border-width:0 2px 2px 0}
-.rune{
-  position:absolute;color:var(--blood-bright);
-  font-size:1.3rem;pointer-events:none;user-select:none;
-  animation:float linear infinite;
-}
-.h-rule{
-  position:absolute;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--blood),var(--crimson),var(--blood),transparent);
-  opacity:.45;
-}
-.title-wrap{position:relative;z-index:10}
-.pre-title{
-  font-family:'Orbitron',sans-serif;
-  font-size:.62rem;letter-spacing:.55em;
-  color:var(--blood-bright);text-transform:uppercase;
-  margin-bottom:1.6rem;
-  display:flex;align-items:center;justify-content:center;gap:1.2rem;
-  animation:sweep 1s ease .3s both;
-}
-.pre-title::before,.pre-title::after{content:'';display:block;width:55px;height:1px;background:var(--blood-bright)}
-.main-title{
-  font-family:'Cinzel Decorative',serif;
-  font-size:clamp(3.2rem,9.5vw,8.5rem);
-  font-weight:900;color:var(--gold-light);
-  letter-spacing:.15em;line-height:1;
-  text-transform:uppercase;
-  animation:title-in 1.6s cubic-bezier(.16,1,.3,1) .5s both,glow-gold 4.5s ease-in-out 2.2s infinite;
-}
-.main-title .sub-word{
-  display:block;color:var(--crimson);font-size:.36em;
-  letter-spacing:.45em;margin-top:.5em;
-  animation:sweep 1s ease 1.2s both;
-  text-shadow:0 0 30px rgba(220,20,60,.55);
-}
-.empire-bar{
-  width:100%;max-width:580px;height:2px;
-  background:linear-gradient(90deg,transparent,var(--gold),var(--gold-light),var(--gold),transparent);
-  margin:2rem auto;
-  animation:bar-grow 1.6s ease 1.5s both;transform-origin:center;
-}
-.tagline{
-  font-family:'Cinzel',serif;
-  font-size:clamp(.72rem,1.8vw,.95rem);
-  letter-spacing:.3em;color:var(--text-dim);
-  text-transform:uppercase;line-height:2.2;
-  max-width:620px;animation:sweep 1s ease 1.8s both;
-}
-.scroll-hint{
-  margin-top:3rem;
-  font-family:'Orbitron',sans-serif;
-  font-size:.58rem;letter-spacing:.5em;
-  color:var(--blood-bright);text-transform:uppercase;
-  animation:flicker 5s ease-in-out 3.5s infinite;
-  display:flex;flex-direction:column;align-items:center;gap:.6rem;
-}
-.scroll-hint::after{
-  content:'';display:block;width:1px;height:40px;
-  background:linear-gradient(180deg,var(--blood-bright),transparent);
-  animation:drip-line 2.2s ease-in-out infinite;
+    radial-gradient(ellipse 90% 70% at 50% 60%, rgba(150,0,20,.18) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 90% at 10% 50%, rgba(60,0,80,.2)  0%, transparent 60%),
+    radial-gradient(ellipse 50% 90% at 90% 50%, rgba(60,0,80,.2)  0%, transparent 60%),
+    radial-gradient(ellipse 100% 50% at 50% 100%, rgba(100,0,0,.3) 0%, transparent 60%),
+    linear-gradient(180deg, var(--void) 0%, var(--abyss) 40%, #0C0415 70%, var(--void) 100%);
 }
 
-/* ─── STATS ─── */
-.stats-strip{
-  background:var(--dark2);
-  border-top:1px solid var(--blood);border-bottom:1px solid var(--blood);
-  padding:1.8rem 2rem;
-  display:flex;align-items:center;justify-content:center;
-  gap:3rem;flex-wrap:wrap;position:relative;overflow:hidden;
-}
-.stats-strip::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(139,0,0,.06) 50%,transparent);
-  background-size:200% 100%;animation:shimmer 4s linear infinite;
-}
-.stat-item{text-align:center}
-.stat-num{
-  display:block;font-family:'Orbitron',sans-serif;
-  font-size:1.8rem;font-weight:700;color:var(--gold-light);
-  text-shadow:0 0 15px rgba(245,200,66,.35);line-height:1;
-}
-.stat-label{
-  font-family:'Cinzel',serif;font-size:.6rem;
-  letter-spacing:.4em;color:var(--text-dim);
-  text-transform:uppercase;margin-top:.4rem;display:block;
-}
-.stat-div{width:1px;height:40px;background:var(--blood);opacity:.6}
-
-/* ─── SECTIONS ─── */
-.section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
-.sec-label{
-  font-family:'Orbitron',sans-serif;font-size:.58rem;
-  letter-spacing:.6em;color:var(--blood-bright);text-transform:uppercase;
-  display:flex;align-items:center;justify-content:center;gap:1rem;
-  margin-bottom:1.2rem;
-}
-.sec-label::before,.sec-label::after{content:'';display:block;width:35px;height:1px;background:var(--blood)}
-.sec-title{
-  font-family:'Cinzel Decorative',serif;
-  font-size:clamp(1.6rem,4vw,2.8rem);font-weight:700;
-  color:var(--gold-light);text-align:center;letter-spacing:.1em;
-  text-shadow:0 0 20px rgba(200,153,10,.3);margin-bottom:3.5rem;
+/* cosmic dust streaks */
+.hero-atm::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(1px 120px at 20% 30%, rgba(200,16,32,.4), transparent),
+    radial-gradient(1px 80px  at 75% 20%, rgba(200,16,32,.3), transparent),
+    radial-gradient(1px 60px  at 40% 80%, rgba(180,135,10,.25), transparent),
+    radial-gradient(1px 100px at 85% 70%, rgba(180,135,10,.2), transparent);
 }
 
-/* ─── VIDEO SECTION ─── */
-.video-section{
-  padding:5rem 2rem;
-  background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(139,0,0,.12) 0%,transparent 70%),var(--dark);
-  position:relative;overflow:hidden;
+/* central viltrum seal */
+.seal-wrap {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
 }
-.video-section::before{
-  content:'';position:absolute;left:0;right:0;top:0;height:2px;
-  background:linear-gradient(90deg,transparent,var(--blood),var(--crimson),var(--blood),transparent);
+.seal-svg {
+  width: min(600px, 90vw);
+  height: min(600px, 90vw);
+  opacity: .07;
+  animation: seal-spin 120s linear infinite;
 }
-.video-section::after{
-  content:'';position:absolute;left:0;right:0;bottom:0;height:2px;
-  background:linear-gradient(90deg,transparent,var(--blood),var(--crimson),var(--blood),transparent);
-}
-.video-header{text-align:center;margin-bottom:2.5rem}
-.video-outer{max-width:860px;margin:0 auto;position:relative}
-.video-frame{
-  position:relative;padding:3px;
-  background:linear-gradient(135deg,var(--blood) 0%,var(--gold) 25%,var(--crimson) 50%,var(--gold) 75%,var(--blood) 100%);
-  background-size:300% 300%;animation:shimmer 6s linear infinite;border-radius:4px;
-}
-.video-frame-inner{background:var(--black);position:relative;border-radius:3px;overflow:hidden}
-.video-frame video{
-  display:block;width:100%;height:auto;max-height:520px;
-  object-fit:contain;background:#000;
-}
-.v-corner{
-  position:absolute;width:24px;height:24px;
-  border-color:var(--gold-light);border-style:solid;z-index:5;
-}
-.v-corner.vtl{top:8px;left:8px;border-width:2px 0 0 2px}
-.v-corner.vtr{top:8px;right:8px;border-width:2px 2px 0 0}
-.v-corner.vbl{bottom:8px;left:8px;border-width:0 0 2px 2px}
-.v-corner.vbr{bottom:8px;right:8px;border-width:0 2px 2px 0}
-.v-badge{
-  display:inline-flex;align-items:center;gap:.6rem;
-  font-family:'Orbitron',sans-serif;font-size:.55rem;
-  letter-spacing:.4em;color:var(--blood-bright);text-transform:uppercase;
-  margin-top:1.2rem;animation:badge-in .8s ease both;
-}
-.v-badge::before,.v-badge::after{content:'';display:block;width:30px;height:1px;background:currentColor}
-.video-meta{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-top:1.8rem;padding-top:1.2rem;
-  border-top:1px solid rgba(139,0,0,.4);flex-wrap:wrap;gap:1rem;
-}
-.vm-item{display:flex;flex-direction:column;gap:.3rem}
-.vm-item .label{font-family:'Orbitron',sans-serif;font-size:.5rem;letter-spacing:.5em;color:var(--text-dim);text-transform:uppercase}
-.vm-item .value{font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold-light)}
+@keyframes seal-spin { to { transform: rotate(360deg); } }
 
-/* ─── LORE CARDS ─── */
-.lore-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem}
-.lore-card{
-  background:var(--dark2);border:1px solid rgba(139,0,0,.5);
-  border-top:2px solid var(--blood-bright);padding:2rem 1.5rem;
-  position:relative;transition:border-color .3s,transform .3s;
-  animation:pulse-border 4s ease-in-out infinite;
+/* horizontal blades */
+.blade {
+  position: absolute; left: 0; right: 0;
+  height: 1px; z-index: 3;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(200,16,32,.0) 10%,
+    rgba(200,16,32,.6) 35%,
+    rgba(232,48,26,.9) 50%,
+    rgba(200,16,32,.6) 65%,
+    rgba(200,16,32,.0) 90%,
+    transparent 100%);
 }
-.lore-card:hover{transform:translateY(-4px);border-color:var(--gold);border-top-color:var(--gold-light);animation:none}
-.lore-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:60px;
-  background:linear-gradient(180deg,rgba(139,0,0,.1),transparent);pointer-events:none;
-}
-.card-icon{font-size:1.8rem;margin-bottom:1rem;display:block;filter:grayscale(1) sepia(1) hue-rotate(330deg) saturate(2)}
-.card-title{
-  font-family:'Cinzel',serif;font-size:.85rem;font-weight:900;
-  letter-spacing:.2em;color:var(--gold-light);text-transform:uppercase;margin-bottom:.8rem;
-}
-.card-text{font-family:'Cinzel',serif;font-size:.78rem;line-height:2;color:var(--text-dim);letter-spacing:.05em}
+.blade.t { top: 14%; }
+.blade.b { bottom: 14%; }
 
-/* ─── MOTTO ─── */
-.motto-section{padding:5rem 2rem;text-align:center;position:relative;overflow:hidden}
-.motto-section::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(139,0,0,.08),transparent);
+/* corner marks */
+.mk {
+  position: absolute; width: 50px; height: 50px;
+  border: 1.5px solid var(--gold); opacity: .5; z-index: 3;
 }
-.motto-rule{width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 2.5rem}
-.motto-text{
-  font-family:'Cinzel Decorative',serif;
-  font-size:clamp(1rem,3.5vw,2rem);font-weight:700;
-  color:var(--text);letter-spacing:.12em;line-height:1.8;
-  max-width:700px;margin:0 auto;position:relative;z-index:1;
-}
-.motto-text em{color:var(--crimson);font-style:normal;text-shadow:0 0 20px rgba(220,20,60,.5)}
-.motto-text strong{color:var(--gold-light);font-weight:900;text-shadow:0 0 20px rgba(200,153,10,.4)}
+.mk.tl { top: 28px; left: 28px; border-right: none; border-bottom: none; }
+.mk.tr { top: 28px; right: 28px; border-left: none; border-bottom: none; }
+.mk.bl { bottom: 28px; left: 28px; border-right: none; border-top: none; }
+.mk.br { bottom: 28px; right: 28px; border-left: none; border-top: none; }
 
-/* ─── FOOTER ─── */
-footer{border-top:1px solid var(--blood);padding:2rem;text-align:center;background:var(--dark);position:relative}
-footer::before{
-  content:'';position:absolute;left:0;right:0;top:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--crimson),transparent);
+/* diamond ornaments */
+.diamond {
+  position: absolute; width: 8px; height: 8px;
+  background: var(--crimson);
+  transform: rotate(45deg);
+  z-index: 3;
 }
-.footer-title{font-family:'Cinzel Decorative',serif;font-size:.8rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;margin-bottom:.5rem}
-.footer-sub{font-family:'Orbitron',sans-serif;font-size:.5rem;letter-spacing:.5em;color:var(--text-dim);text-transform:uppercase}
+.diamond.l { left: 50%; top: 14%; transform: translateX(-50%) rotate(45deg); margin-top: -4px; }
+.diamond.r { left: 50%; bottom: 14%; transform: translateX(-50%) rotate(45deg); margin-bottom: -4px; }
 
-@media(max-width:600px){
-  .stats-strip{gap:1.5rem}
-  .stat-div{display:none}
-  .video-meta{flex-direction:column}
+/* ── TITLE BLOCK ── */
+.hero-content {
+  position: relative; z-index: 10;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0;
+}
+
+.eyebrow {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .55rem;
+  font-weight: 400;
+  letter-spacing: .8em;
+  color: var(--crimson);
+  text-transform: uppercase;
+  margin-bottom: 2.4rem;
+  opacity: 0;
+  animation: fade-up .8s ease .4s forwards;
+  display: flex; align-items: center; gap: 1.4rem;
+}
+.eyebrow::before, .eyebrow::after {
+  content: '';
+  display: block; width: 50px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--crimson));
+}
+.eyebrow::after { transform: scaleX(-1); }
+
+.hero-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(4rem, 12vw, 10rem);
+  font-weight: 900;
+  line-height: .9;
+  letter-spacing: .08em;
+  color: transparent;
+  background: linear-gradient(
+    160deg,
+    var(--pale)  0%,
+    var(--gold3) 30%,
+    var(--gold2) 50%,
+    var(--gold3) 70%,
+    var(--pale)  100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation:
+    title-reveal 1.4s cubic-bezier(.16,1,.3,1) .6s both,
+    gold-shimmer 5s linear 2.5s infinite;
+  text-shadow: none;
+  filter: drop-shadow(0 0 40px rgba(200,136,10,.35));
+}
+
+@keyframes title-reveal {
+  0%  { opacity:0; letter-spacing: .5em; filter: blur(25px) drop-shadow(0 0 0 transparent); }
+  100%{ opacity:1; letter-spacing: .08em; filter: drop-shadow(0 0 40px rgba(200,136,10,.35)); }
+}
+@keyframes gold-shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.title-divider {
+  width: 0;
+  height: 2px;
+  margin: 1.8rem 0;
+  background: linear-gradient(90deg, transparent, var(--gold2), var(--gold3), var(--gold2), transparent);
+  animation: divider-expand 1.2s ease 1.4s forwards;
+}
+@keyframes divider-expand { to { width: 500px; } }
+
+.subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(.65rem, 1.5vw, .85rem);
+  font-weight: 400;
+  letter-spacing: .35em;
+  color: var(--muted);
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fade-up .8s ease 1.8s forwards;
+  line-height: 2.2;
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 3rem; left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex; flex-direction: column;
+  align-items: center; gap: .8rem;
+  opacity: 0;
+  animation: fade-up .8s ease 2.5s forwards;
+}
+.scroll-indicator span {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .45rem;
+  letter-spacing: .6em;
+  color: var(--dim);
+  text-transform: uppercase;
+}
+.scroll-line {
+  width: 1px; height: 0;
+  background: linear-gradient(180deg, var(--crimson), transparent);
+  animation: scroll-drip 2.4s ease-in-out 3s infinite;
+}
+@keyframes scroll-drip {
+  0%   { height: 0;    opacity: 1; }
+  70%  { opacity: 1; }
+  100% { height: 60px; opacity: 0; }
+}
+
+@keyframes fade-up {
+  0%   { opacity: 0; transform: translateY(16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════
+   POWER STRIP
+══════════════════════════════ */
+.power-strip {
+  position: relative;
+  background: linear-gradient(90deg, var(--abyss), var(--deep) 30%, var(--deep2) 50%, var(--deep) 70%, var(--abyss));
+  border-top: 1px solid rgba(200,16,32,.4);
+  border-bottom: 1px solid rgba(200,16,32,.4);
+  padding: 2.2rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  overflow: hidden;
+}
+.power-strip::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(155,0,0,.08) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: strip-sweep 6s linear infinite;
+}
+@keyframes strip-sweep {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.pw-stat {
+  flex: 1;
+  text-align: center;
+  padding: 0 1.5rem;
+  position: relative;
+}
+.pw-stat + .pw-stat::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 1px; height: 36px;
+  background: linear-gradient(180deg, transparent, rgba(155,0,0,.7), transparent);
+}
+.pw-num {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--gold3);
+  line-height: 1;
+  letter-spacing: .05em;
+}
+.pw-lbl {
+  display: block;
+  font-family: 'Orbitron', sans-serif;
+  font-size: .45rem;
+  letter-spacing: .5em;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-top: .5rem;
+}
+
+/* ══════════════════════════════
+   VIDEO SECTION
+══════════════════════════════ */
+.vid-section {
+  position: relative;
+  padding: 7rem 2rem;
+  overflow: hidden;
+}
+.vid-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(100,0,10,.15) 0%, transparent 70%),
+    linear-gradient(180deg, var(--void) 0%, var(--abyss) 30%, var(--abyss) 70%, var(--void) 100%);
+}
+
+.section-tag {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .5rem;
+  letter-spacing: .7em;
+  color: var(--blood2);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; justify-content: center; gap: 1rem;
+}
+.section-tag::before, .section-tag::after {
+  content: '◆';
+  font-size: .4rem;
+  color: var(--blood);
+}
+
+.section-h {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+  font-weight: 700;
+  color: var(--pale);
+  text-align: center;
+  letter-spacing: .12em;
+  margin-bottom: 4rem;
+  text-shadow: 0 0 30px rgba(200,136,10,.2);
+}
+
+/* video container */
+.vid-shell {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+/* outer decorative ring */
+.vid-ring {
+  position: absolute;
+  inset: -16px;
+  border: 1px solid rgba(200,16,32,.2);
+  pointer-events: none;
+}
+.vid-ring::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(184,135,10,.15);
+}
+
+/* corner plates */
+.vcp {
+  position: absolute;
+  width: 30px; height: 30px;
+  z-index: 5; pointer-events: none;
+}
+.vcp::before, .vcp::after {
+  content: '';
+  position: absolute;
+  background: var(--gold2);
+}
+.vcp::before { width: 100%; height: 2px; top: 0; left: 0; }
+.vcp::after  { width: 2px; height: 100%; top: 0; left: 0; }
+.vcp.tr { top: 0; right: 0; transform: rotate(90deg); }
+.vcp.bl { bottom: 0; left: 0; transform: rotate(270deg); }
+.vcp.br { bottom: 0; right: 0; transform: rotate(180deg); }
+.vcp.tl { top: 0; left: 0; }
+
+/* animated border */
+.vid-border {
+  position: absolute; inset: -3px;
+  background: linear-gradient(
+    var(--ang, 0deg),
+    var(--blood) 0%,
+    var(--gold) 25%,
+    var(--crimson) 50%,
+    var(--gold2) 75%,
+    var(--blood) 100%
+  );
+  background-size: 300% 300%;
+  border-radius: 2px;
+  animation: border-rot 8s linear infinite;
+  z-index: 0;
+}
+@keyframes border-rot {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.vid-inner {
+  position: relative; z-index: 1;
+  background: #000;
+  line-height: 0;
+}
+.vid-inner video {
+  display: block;
+  width: 100%;
+  max-height: 540px;
+  object-fit: contain;
+  background: #000;
+}
+
+/* classified ribbon */
+.classified {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-top: 2.2rem;
+}
+.classified-badge {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .48rem;
+  letter-spacing: .5em;
+  padding: .5rem 1.4rem;
+  border: 1px solid rgba(200,16,32,.5);
+  color: var(--crimson);
+  text-transform: uppercase;
+  background: rgba(200,16,32,.05);
+  position: relative;
+  overflow: hidden;
+}
+.classified-badge::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(200,16,32,.08), transparent);
+  background-size: 200% 100%;
+  animation: strip-sweep 3s linear infinite;
+}
+
+.vid-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 1.8rem;
+  padding: 1.4rem 0;
+  border-top: 1px solid rgba(155,0,0,.3);
+  flex-wrap: wrap;
+  gap: 1.2rem;
+}
+.vm { display: flex; flex-direction: column; gap: .4rem; }
+.vm-k {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .42rem;
+  letter-spacing: .55em;
+  color: var(--dim);
+  text-transform: uppercase;
+}
+.vm-v {
+  font-family: 'Cinzel', serif;
+  font-size: .85rem;
+  color: var(--gold3);
+  letter-spacing: .05em;
+}
+
+/* ══════════════════════════════
+   LORE — asymmetric grid
+══════════════════════════════ */
+.lore-section {
+  padding: 7rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.lore-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    var(--void) 0%,
+    var(--deep) 30%,
+    var(--deep2) 50%,
+    var(--deep) 70%,
+    var(--void) 100%
+  );
+}
+
+.lore-grid {
+  position: relative; z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 1px;
+  background: rgba(155,0,0,.2);
+  border: 1px solid rgba(155,0,0,.2);
+}
+
+.lore-card {
+  background: var(--abyss);
+  padding: 2.8rem 2rem;
+  position: relative;
+  transition: background .4s;
+  overflow: hidden;
+}
+.lore-card:hover { background: var(--deep); }
+
+/* red top accent bar */
+.lore-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--blood2), var(--crimson), var(--blood2), transparent);
+  opacity: 0;
+  transition: opacity .4s;
+}
+.lore-card:hover::before { opacity: 1; }
+
+/* glow corner */
+.lore-card::after {
+  content: '';
+  position: absolute;
+  top: -40px; left: -40px;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, rgba(200,16,32,.12), transparent 70%);
+  transition: opacity .4s;
+  opacity: 0;
+}
+.lore-card:hover::after { opacity: 1; }
+
+/* featured card — spans 2 rows */
+.lore-card.featured {
+  grid-row: 1 / 3;
+  background: linear-gradient(160deg, var(--deep2), var(--deep) 60%, var(--abyss));
+  border-right: 1px solid rgba(200,16,32,.25);
+}
+.lore-card.featured::before { opacity: .6; }
+.lore-card.featured:hover { background: var(--mid); }
+
+.lc-num {
+  font-family: 'Cinzel', serif;
+  font-size: 4rem;
+  font-weight: 900;
+  color: rgba(155,0,0,.2);
+  line-height: 1;
+  margin-bottom: 1rem;
+  letter-spacing: -.02em;
+  display: block;
+}
+.lore-card.featured .lc-num {
+  font-size: 7rem;
+  color: rgba(155,0,0,.15);
+}
+.lc-title {
+  font-family: 'Cinzel', serif;
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .22em;
+  color: var(--gold3);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.lore-card.featured .lc-title {
+  font-size: 1rem;
+  letter-spacing: .18em;
+}
+.lc-rule {
+  width: 40px; height: 1px;
+  background: var(--blood2);
+  margin-bottom: 1.2rem;
+  transition: width .4s;
+}
+.lore-card:hover .lc-rule { width: 70px; }
+.lc-body {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .95rem;
+  font-style: italic;
+  line-height: 1.9;
+  color: var(--muted);
+  letter-spacing: .02em;
+}
+.lore-card.featured .lc-body {
+  font-size: 1.05rem;
+}
+
+/* ══════════════════════════════
+   QUOTE SECTION
+══════════════════════════════ */
+.quote-section {
+  padding: 8rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.quote-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(100,0,20,.2) 0%, transparent 70%);
+}
+
+.quote-mark {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 8rem;
+  line-height: .5;
+  color: rgba(155,0,0,.2);
+  display: block;
+  margin-bottom: 2rem;
+  animation: float-mark 6s ease-in-out infinite;
+}
+@keyframes float-mark {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+.quote-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1.3rem, 3.5vw, 2.4rem);
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--text);
+  max-width: 820px;
+  margin: 0 auto 2.5rem;
+  letter-spacing: .02em;
+  position: relative; z-index: 1;
+}
+.quote-text strong {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--gold3);
+}
+.quote-text em {
+  font-style: normal;
+  color: var(--crimson);
+}
+
+.quote-attr {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .48rem;
+  letter-spacing: .7em;
+  color: var(--dim);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  position: relative; z-index: 1;
+}
+.quote-attr::before, .quote-attr::after {
+  content: '';
+  display: block; width: 60px; height: 1px;
+  background: var(--blood);
+}
+
+/* ══════════════════════════════
+   FOOTER
+══════════════════════════════ */
+.site-footer {
+  position: relative;
+  padding: 3.5rem 2rem;
+  text-align: center;
+  background: var(--void);
+  border-top: 1px solid rgba(155,0,0,.35);
+  overflow: hidden;
+}
+.site-footer::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--crimson), var(--gold), var(--crimson), transparent);
+}
+
+.footer-seal {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 1rem;
+  margin-bottom: 2rem;
+}
+.footer-logo {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: .15em;
+  color: transparent;
+  background: linear-gradient(135deg, var(--gold) 30%, var(--gold3) 60%, var(--gold) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.footer-sub {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .42rem;
+  letter-spacing: .6em;
+  color: var(--dim);
+  text-transform: uppercase;
+}
+.footer-rule {
+  width: 120px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blood), transparent);
+  margin: 0 auto 1.5rem;
+}
+.footer-copy {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .8rem;
+  color: var(--dim);
+  letter-spacing: .1em;
+  font-style: italic;
+}
+
+/* ── UTILITIES ── */
+@media (max-width: 700px) {
+  .lore-grid { grid-template-columns: 1fr; }
+  .lore-card.featured { grid-row: auto; border-right: none; }
+  .pw-stat { padding: 0 .8rem; }
+  .pw-lbl { letter-spacing: .2em; }
+  .title-divider { animation: divider-expand-sm 1.2s ease 1.4s forwards; }
+  @keyframes divider-expand-sm { to { width: 80%; } }
+}
+@media (max-width: 500px) {
+  .power-strip { flex-wrap: wrap; gap: 1.5rem; }
+  .pw-stat + .pw-stat::before { display: none; }
 }
 </style>
 </head>
 <body>
 
-<!-- HERO -->
+<canvas id="particles"></canvas>
+
+<!-- ═══════════════ HERO ═══════════════ -->
 <section class="hero">
-  <div class="hero-bg"></div>
+  <div class="hero-atm"></div>
 
-  <svg class="emblem-bg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <polygon points="200,20 380,310 20,310" stroke="#CC0000" stroke-width="2" fill="rgba(139,0,0,0.15)"/>
-    <polygon points="200,380 20,90 380,90" stroke="#CC0000" stroke-width="2" fill="rgba(139,0,0,0.1)"/>
-    <circle cx="200" cy="200" r="160" stroke="#8B0000" stroke-width="1.5" fill="none"/>
-    <circle cx="200" cy="200" r="110" stroke="#CC0000" stroke-width="1" fill="none" stroke-dasharray="8,6"/>
-    <circle cx="200" cy="200" r="60" stroke="#DC143C" stroke-width="2" fill="rgba(139,0,0,0.2)"/>
-    <line x1="200" y1="40" x2="200" y2="360" stroke="#8B0000" stroke-width="1" opacity="0.7"/>
-    <line x1="40" y1="200" x2="360" y2="200" stroke="#8B0000" stroke-width="1" opacity="0.7"/>
-    <line x1="87" y1="87" x2="313" y2="313" stroke="#8B0000" stroke-width="1" opacity="0.4"/>
-    <line x1="313" y1="87" x2="87" y2="313" stroke="#8B0000" stroke-width="1" opacity="0.4"/>
-    <polygon points="200,40 220,195 200,360 180,195" fill="rgba(200,153,10,0.2)" stroke="#C8990A" stroke-width="1"/>
-  </svg>
+  <div class="seal-wrap">
+    <svg class="seal-svg" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- outer rings -->
+      <circle cx="250" cy="250" r="240" stroke="#8B0000" stroke-width="1.5" stroke-dasharray="6 4"/>
+      <circle cx="250" cy="250" r="210" stroke="#6B0000" stroke-width="1"/>
+      <circle cx="250" cy="250" r="170" stroke="#9B0000" stroke-width="2"/>
+      <circle cx="250" cy="250" r="120" stroke="#C81020" stroke-width="1.5"/>
+      <circle cx="250" cy="250" r="70"  stroke="#9B0000" stroke-width="1"/>
+      <!-- spokes -->
+      <line x1="250" y1="10"  x2="250" y2="490" stroke="#8B0000" stroke-width="1" opacity=".5"/>
+      <line x1="10"  y1="250" x2="490" y2="250" stroke="#8B0000" stroke-width="1" opacity=".5"/>
+      <line x1="80"  y1="80"  x2="420" y2="420" stroke="#6B0000" stroke-width="1" opacity=".4"/>
+      <line x1="420" y1="80"  x2="80"  y2="420" stroke="#6B0000" stroke-width="1" opacity=".4"/>
+      <line x1="250" y1="10"  x2="420" y2="420" stroke="#4A0000" stroke-width=".5" opacity=".3"/>
+      <line x1="250" y1="10"  x2="80"  y2="420" stroke="#4A0000" stroke-width=".5" opacity=".3"/>
+      <!-- star of viltrum -->
+      <polygon points="250,30 270,215 250,470 230,215" fill="rgba(200,16,32,.3)" stroke="#C81020" stroke-width="1.5"/>
+      <polygon points="30,250 215,230 470,250 215,270" fill="rgba(200,16,32,.2)" stroke="#9B0000" stroke-width="1"/>
+      <!-- inner diamond -->
+      <polygon points="250,170 330,250 250,330 170,250" fill="rgba(180,135,10,.15)" stroke="#B8870A" stroke-width="1.5"/>
+      <!-- tick marks -->
+      <g stroke="#8B0000" stroke-width="1" opacity=".6">
+        <line x1="250" y1="12" x2="250" y2="28"/>
+        <line x1="388" y1="112" x2="375" y2="123"/>
+        <line x1="488" y1="250" x2="472" y2="250"/>
+        <line x1="388" y1="388" x2="375" y2="377"/>
+        <line x1="250" y1="488" x2="250" y2="472"/>
+        <line x1="112" y1="388" x2="123" y2="377"/>
+        <line x1="12"  y1="250" x2="28"  y2="250"/>
+        <line x1="112" y1="112" x2="123" y2="123"/>
+      </g>
+    </svg>
+  </div>
 
-  <span class="rune" style="left:6%;top:18%;animation-duration:7s">✦</span>
-  <span class="rune" style="right:8%;top:22%;animation-duration:9s;animation-delay:1.5s">⬟</span>
-  <span class="rune" style="left:12%;bottom:25%;animation-duration:8s;animation-delay:3s">◈</span>
-  <span class="rune" style="right:5%;bottom:20%;animation-duration:6s;animation-delay:.8s">✦</span>
-  <span class="rune" style="left:3%;top:50%;animation-duration:11s;animation-delay:2s;font-size:.9rem">⬡</span>
-  <span class="rune" style="right:3%;top:55%;animation-duration:10s;animation-delay:4s;font-size:.9rem">⬡</span>
+  <div class="blade t"></div>
+  <div class="blade b"></div>
+  <div class="diamond l"></div>
+  <div class="diamond r"></div>
+  <div class="mk tl"></div><div class="mk tr"></div>
+  <div class="mk bl"></div><div class="mk br"></div>
 
-  <div class="h-rule" style="top:16%"></div>
-  <div class="h-rule" style="bottom:16%"></div>
-
-  <div class="corner tl"></div>
-  <div class="corner tr"></div>
-  <div class="corner bl"></div>
-  <div class="corner br"></div>
-
-  <div class="title-wrap">
-    <div class="pre-title">Império Viltrumita · Ano 3000</div>
-    <h1 class="main-title">
-      THRAGG
-      <span class="sub-word">AURA</span>
-    </h1>
-    <div class="empire-bar"></div>
-    <p class="tagline">
-      O Último Grande Líder · Senhor da Raça Mais Poderosa do Universo<br>
-      Força · Domínio · Invencibilidade
+  <div class="hero-content">
+    <div class="eyebrow">Grão-Regente · Sangue Puro · Eterno</div>
+    <h1 class="hero-title">THRAGG</h1>
+    <div class="title-divider"></div>
+    <p class="subtitle">
+      Senhor Supremo do Império Viltrumita<br>
+      O Mais Poderoso Ser do Universo Conhecido
     </p>
-    <div class="scroll-hint">Testemunhe o Poder</div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Descer</span>
+    <div class="scroll-line"></div>
   </div>
 </section>
 
-<!-- STATS STRIP -->
-<div class="stats-strip">
-  <div class="stat-item">
-    <span class="stat-num">∞</span>
-    <span class="stat-label">Anos de Vida</span>
+<!-- ═══════════════ POWER STRIP ═══════════════ -->
+<div class="power-strip">
+  <div class="pw-stat">
+    <span class="pw-num">∞</span>
+    <span class="pw-lbl">Anos de Vida</span>
   </div>
-  <div class="stat-div"></div>
-  <div class="stat-item">
-    <span class="stat-num">10M+</span>
-    <span class="stat-label">Planetas Conquistados</span>
+  <div class="pw-stat">
+    <span class="pw-num">5.000</span>
+    <span class="pw-lbl">Anos de Reinado</span>
   </div>
-  <div class="stat-div"></div>
-  <div class="stat-item">
-    <span class="stat-num">5.000</span>
-    <span class="stat-label">Anos de Reinado</span>
+  <div class="pw-stat">
+    <span class="pw-num">10M+</span>
+    <span class="pw-lbl">Planetas Subjugados</span>
   </div>
-  <div class="stat-div"></div>
-  <div class="stat-item">
-    <span class="stat-num">Ⅰ</span>
-    <span class="stat-label">Grão-Regente</span>
+  <div class="pw-stat">
+    <span class="pw-num">Ⅰ</span>
+    <span class="pw-lbl">Grão-Regente</span>
   </div>
-  <div class="stat-div"></div>
-  <div class="stat-item">
-    <span class="stat-num">100%</span>
-    <span class="stat-label">Sangue Viltrumita</span>
+  <div class="pw-stat">
+    <span class="pw-num">100%</span>
+    <span class="pw-lbl">Sangue Viltrumita</span>
   </div>
 </div>
 
-<!-- VIDEO -->
-<div class="video-section">
-  <div class="video-header">
-    <div class="sec-label">Transmissão Imperial</div>
-    <h2 class="sec-title">Arquivo do Grão-Regente</h2>
-    <div style="display:flex;justify-content:center">
-      <div class="v-badge">Classificação: Supremo · Olhos Viltrumitas Somente</div>
+<!-- ═══════════════ VIDEO ═══════════════ -->
+<div class="vid-section">
+  <div class="section-tag">Arquivo Supremo</div>
+  <h2 class="section-h">Transmissão do Grão-Regente</h2>
+
+  <div class="vid-shell">
+    <div class="vid-ring"></div>
+    <div class="vid-border"></div>
+    <div class="vid-inner">
+      <div class="vcp tl"></div>
+      <div class="vcp tr"></div>
+      <div class="vcp bl"></div>
+      <div class="vcp br"></div>
+      <video controls preload="metadata">
+        <source src="Download__3_.mp4" type="video/mp4">
+      </video>
     </div>
   </div>
 
-  <div class="video-outer">
-    <div class="video-frame">
-      <div class="video-frame-inner">
-        <div class="v-corner vtl"></div>
-        <div class="v-corner vtr"></div>
-        <div class="v-corner vbl"></div>
-        <div class="v-corner vbr"></div>
-        <video controls preload="metadata">
-          <source src="Download__3_.mp4" type="video/mp4">
-          Seu navegador não suporta vídeo HTML5.
-        </video>
-      </div>
+  <div style="text-align:center">
+    <div class="classified">
+      <div class="classified-badge">⬛ Classificação: Suprema Imperial</div>
+      <div class="classified-badge">◆ Acesso Restrito · Viltrum</div>
     </div>
+  </div>
 
-    <div class="video-meta">
-      <div class="vm-item">
-        <span class="label">Origem</span>
-        <span class="value">Planeta Viltrum · Arquivo Central</span>
-      </div>
-      <div class="vm-item">
-        <span class="label">Assunto</span>
-        <span class="value">Thragg — O Grão-Regente</span>
-      </div>
-      <div class="vm-item">
-        <span class="label">Classificação</span>
-        <span class="value" style="color:var(--crimson)">⬛ Ultra-Secreto</span>
-      </div>
+  <div class="vid-meta" style="max-width:900px;margin:0 auto">
+    <div class="vm">
+      <span class="vm-k">Origem</span>
+      <span class="vm-v">Planeta Viltrum · Arquivo Central</span>
+    </div>
+    <div class="vm">
+      <span class="vm-k">Sujeito</span>
+      <span class="vm-v">Thragg — O Grão-Regente</span>
+    </div>
+    <div class="vm">
+      <span class="vm-k">Status</span>
+      <span class="vm-v" style="color:var(--crimson)">⬛ Ultra-Secreto</span>
+    </div>
+    <div class="vm">
+      <span class="vm-k">Era Imperial</span>
+      <span class="vm-v">Ano 3.000 · Ciclo VII</span>
     </div>
   </div>
 </div>
 
-<!-- LORE -->
-<section class="section">
-  <div style="text-align:center;margin-bottom:3.5rem">
-    <div class="sec-label">Dossier Imperial</div>
-    <h2 class="sec-title">O Legado de Thragg</h2>
-  </div>
-  <div class="lore-grid">
-    <div class="lore-card">
-      <span class="card-icon">⚔️</span>
-      <div class="card-title">Combatente Supremo</div>
-      <p class="card-text">Nascido com força superior a qualquer outro Viltrumita. Seu treinamento durou milênios — cada batalha um testemunho da perfeição guerreira.</p>
-    </div>
-    <div class="lore-card" style="animation-delay:.3s">
-      <span class="card-icon">👑</span>
-      <div class="card-title">Grão-Regente</div>
-      <p class="card-text">Escolhido como líder supremo após a queda do Rei Argall. Thragg guiou seu povo por eras de conquista, mantendo o sangue puro e a raça invicta.</p>
-    </div>
-    <div class="lore-card" style="animation-delay:.6s">
-      <span class="card-icon">🌌</span>
-      <div class="card-title">Conquistador Galáctico</div>
-      <p class="card-text">Sob seu comando, o Império Viltrumita expandiu-se por incontáveis setores. Nenhuma força no universo deteve a marcha dos filhos de Viltrum.</p>
-    </div>
-    <div class="lore-card" style="animation-delay:.9s">
-      <span class="card-icon">🧬</span>
-      <div class="card-title">Guardião da Linhagem</div>
-      <p class="card-text">Ocultou sua descendência real por séculos. Seus filhos — os Thraxans — representam a próxima era do domínio Viltrumita no cosmos.</p>
-    </div>
-    <div class="lore-card" style="animation-delay:1.2s">
-      <span class="card-icon">🔥</span>
-      <div class="card-title">Estrategista Implacável</div>
-      <p class="card-text">Por trás da brutalidade existe um intelecto frio. Manipulou impérios com precisão cirúrgica e nunca desperdiçou um único movimento.</p>
-    </div>
-    <div class="lore-card" style="animation-delay:1.5s">
-      <span class="card-icon">💀</span>
-      <div class="card-title">O Fim de Omni-Man</div>
-      <p class="card-text">Nolan Grayson — Omni-Man — sucumbiu perante o Grão-Regente. Thragg demonstrou que não existe força além do seu alcance.</p>
+<!-- ═══════════════ LORE ═══════════════ -->
+<section class="lore-section">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="section-tag" style="margin-bottom:1rem">O Legado</div>
+    <h2 class="section-h">Quem é Thragg</h2>
+
+    <div class="lore-grid">
+
+      <!-- featured -->
+      <div class="lore-card featured">
+        <span class="lc-num">Ⅰ</span>
+        <div class="lc-title">O Último Rei</div>
+        <div class="lc-rule"></div>
+        <p class="lc-body">
+          Thragg não nasceu apenas como um guerreiro — nasceu como a encarnação do destino Viltrumita. Descendente direto do Rei Argall, manteve sua linhagem real em segredo absoluto por séculos enquanto governava como Grão-Regente, o mais alto posto do Império.<br><br>
+          Com força que supera qualquer outro Viltrumita conhecido, Thragg representa a perfeição biológica de uma raça que passou milênios erradicando qualquer fraqueza de seu gene-pool. Cada batalha foi calculada. Cada aliança, uma peça de um jogo maior.<br><br>
+          Ele não governa com medo — governa com certeza. A certeza de que nenhuma força no universo pode detê-lo.
+        </p>
+      </div>
+
+      <!-- cards menores -->
+      <div class="lore-card">
+        <span class="lc-num">Ⅱ</span>
+        <div class="lc-title">Combate Supremo</div>
+        <div class="lc-rule"></div>
+        <p class="lc-body">Derrotou Omni-Man — um dos Viltrumitas mais poderosos — em combate singular. Nenhum ser até hoje sobreviveu a um encontro direto com Thragg em plena capacidade.</p>
+      </div>
+
+      <div class="lore-card">
+        <span class="lc-num">Ⅲ</span>
+        <div class="lc-title">Guardião da Raça</div>
+        <div class="lc-rule"></div>
+        <p class="lc-body">Enquanto o Império entrou em colapso, Thragg preservou a linhagem pura dos Viltrumitas, criando sua prole — os Thraxans — para ser a nova geração do domínio cósmico.</p>
+      </div>
+
+      <div class="lore-card">
+        <span class="lc-num">Ⅳ</span>
+        <div class="lc-title">Estrategista Implacável</div>
+        <div class="lc-rule"></div>
+        <p class="lc-body">Por trás dos punhos existe um intelecto de aço. Thragg manipulou o próprio Omni-Man, o Coalisão de Planetas inteira, e o Invincible por décadas sem jamais revelar suas cartas.</p>
+      </div>
+
+      <div class="lore-card">
+        <span class="lc-num">Ⅴ</span>
+        <div class="lc-title">Imortal de Fato</div>
+        <div class="lc-rule"></div>
+        <p class="lc-body">Viltrumitas cessam de envelhecer em sua plenitude física. Thragg existirá enquanto houver universo — cada século tornando-o mais refinado, mais calculista, mais inevitável.</p>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- MOTTO -->
-<div class="motto-section">
-  <div class="motto-rule"></div>
-  <blockquote class="motto-text">
-    "Somos Viltrumitas.<br>
-    <em>Somos a raça superior.</em><br>
-    O universo nos pertence<br>
-    e <strong>Thragg</strong> é nossa lei."
+<!-- ═══════════════ QUOTE ═══════════════ -->
+<div class="quote-section">
+  <span class="quote-mark">"</span>
+  <blockquote class="quote-text">
+    Somos <em>Viltrumitas</em>.<br>
+    Cada planeta que conquistamos é nosso por direito.<br>
+    Cada raça que dobra o joelho confirma<br>
+    o que sempre foi verdade:<br>
+    <strong>o universo pertence aos fortes.</strong>
   </blockquote>
-  <div class="motto-rule" style="margin-top:2.5rem"></div>
+  <div class="quote-attr">Thragg · Grão-Regente · Viltrum</div>
 </div>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-title">THRAGG · Império Viltrumita</div>
-  <div class="footer-sub" style="margin-top:.5rem">Viltrum · Galáxia Andrômeda · Ano Imperial 3000 · Todos os direitos são do Grão-Regente</div>
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="site-footer">
+  <div class="footer-seal">
+    <div class="footer-logo">THRAGG</div>
+    <div class="footer-sub">Grão-Regente · Império Viltrumita · Eterno</div>
+  </div>
+  <div class="footer-rule"></div>
+  <p class="footer-copy">Viltrum · Galáxia Andrômeda · Ano Imperial 3.000 &nbsp;·&nbsp; Todos os planetas pertencem ao Império</p>
 </footer>
 
+<script>
+// Particle system — floating space dust
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H, pts = [];
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const COLORS = [
+  'rgba(200,16,32,',
+  'rgba(184,135,10,',
+  'rgba(240,200,64,',
+  'rgba(155,0,0,',
+];
+
+for (let i = 0; i < 120; i++) {
+  pts.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    r: Math.random() * 1.2 + .2,
+    vx: (Math.random() - .5) * .15,
+    vy: (Math.random() - .5) * .15,
+    c: COLORS[Math.floor(Math.random() * COLORS.length)],
+    a: Math.random() * .5 + .1,
+  });
+}
+
+function tick() {
+  ctx.clearRect(0, 0, W, H);
+  pts.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = W;
+    if (p.x > W) p.x = 0;
+    if (p.y < 0) p.y = H;
+    if (p.y > H) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.c + p.a + ')';
+    ctx.fill();
+  });
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
 </body>
 </html>

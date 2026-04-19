@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════
    THRAGG EMPIRE — SHARED DATA ENGINE
-   Captura de IP + Localização corrigida
+   Captura de IP corrigida e otimizada
 ═══════════════════════════════════════════════ */
 
 const DB = {
@@ -11,7 +11,6 @@ const DB = {
     try{ localStorage.setItem(key, JSON.stringify(val)) } catch{} 
   },
 
-  /* ── VISITS ── */
   getVisits(){ 
     return this.get('tg_visits') || { total:0, today:0, todayKey:'', days:{}, log:[] } 
   },
@@ -54,7 +53,7 @@ const DB = {
       location: '—'
     };
 
-    // Adiciona imediatamente na tabela
+    // Adiciona imediatamente
     v.log = v.log || [];
     v.log.unshift(entry);
     if(v.log.length > 200) v.log = v.log.slice(0,200);
@@ -62,12 +61,11 @@ const DB = {
 
     if (typeof renderDB === 'function') renderDB();
 
-    // Captura real do IP
+    // Busca o IP real
     fetch('https://api.ipify.org?format=json')
       .then(r => r.json())
       .then(data => {
         entry.ip = data.ip || '—';
-
         return fetch(`https://ipapi.co/${entry.ip}/json/`);
       })
       .then(r => r.json())
@@ -76,8 +74,7 @@ const DB = {
         this.set('tg_visits', v);
         if (typeof renderDB === 'function') renderDB();
       })
-      .catch(err => {
-        console.log("Erro ao buscar IP:", err);
+      .catch(() => {
         entry.ip = '—';
         entry.location = '—';
         this.set('tg_visits', v);
@@ -106,7 +103,6 @@ const DB = {
   },
   clearLog(){ this.set('tg_log', []); },
 
-  /* CREDENTIALS */
   MASTER: { user:'Zenin', pass:'supremoregente@2026', role:'Grão-Regente', master:true },
 
   getCreds(){ return this.get('tg_creds') || [] },
@@ -150,7 +146,7 @@ const DB = {
   }
 };
 
-/* ── Outras funções (gerar credencial, nav, css, canvas) ── */
+/* ── Funções auxiliares ── */
 function generateCredential(label){
   const adj = ['Ferro','Aço','Sangue','Chama','Sombra','Viltrum','Eterno','Supremo','Cinza','Imperial'];
   const noun = ['Guerreiro','Soldado','Regente','Lâmina','Escudo','Punho','Império','Estrela','Corvo','Lobo'];
@@ -181,33 +177,55 @@ function renderNav(activePage){
   </nav>`;
 }
 
-const SHARED_CSS = `... (cole aqui seu SHARED_CSS completo do arquivo antigo) ...`;
+const SHARED_CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Orbitron:wght@400;600;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --void:#020008;--abyss:#06000E;--deep:#0C0118;--deep2:#130222;--mid:#1A0530;
+  --blood:#7A0000;--blood2:#AA0010;--crimson:#CC1020;--fire:#E83020;--ember:#FF5030;
+  --gold:#A87808;--gold2:#C89A18;--gold3:#E8B830;--pale:#FFF0C0;
+  --text:#EAD8C0;--muted:#907868;--dim:#504040;
+}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text);font-family:'Cormorant Garamond',serif;overflow-x:hidden;min-height:100vh}
+#bg-canvas{position:fixed;inset:0;pointer-events:none;z-index:0}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.05) 2px,rgba(0,0,0,.05) 4px);pointer-events:none;z-index:9999}
+.site-nav{position:fixed;top:0;left:0;right:0;z-index:8000;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2.5rem;background:linear-gradient(180deg,rgba(2,0,8,.97),rgba(2,0,8,.75));border-bottom:1px solid rgba(170,0,16,.35);backdrop-filter:blur(10px)}
+.nav-logo{font-family:'Cinzel Decorative',serif;font-size:1rem;font-weight:900;letter-spacing:.2em;color:transparent;background:linear-gradient(90deg,var(--gold2),var(--gold3),var(--gold2));-webkit-background-clip:text;background-clip:text;text-decoration:none}
+.nav-links{display:flex;align-items:center;gap:0}
+.nav-link{font-family:'Orbitron',sans-serif;font-size:.42rem;letter-spacing:.5em;color:var(--muted);text-transform:uppercase;text-decoration:none;padding:.5rem 1.1rem;border-right:1px solid rgba(120,0,0,.2);transition:color .2s,background .2s}
+.nav-link:first-child{border-left:1px solid rgba(120,0,0,.2)}
+.nav-link:hover{color:var(--gold3);background:rgba(120,0,0,.08)}
+.nav-link.active{color:var(--pale);background:rgba(120,0,0,.15)}
+.nav-admin{color:rgba(200,16,32,.6)!important}
+.nav-admin:hover,.nav-admin.active{color:var(--crimson)!important;background:rgba(200,16,32,.1)!important}
+.nav-visits{font-family:'Orbitron',sans-serif;font-size:.38rem;letter-spacing:.4em;color:var(--dim);text-transform:uppercase;display:flex;align-items:center;gap:.5rem}
+.nav-visits-num{color:var(--crimson);font-size:.55rem;font-weight:600}
+.page-wrap{padding-top:60px;min-height:100vh;position:relative;z-index:1}
+.s-tag{font-family:'Orbitron',sans-serif;font-size:.46rem;letter-spacing:.75em;color:var(--blood2);text-transform:uppercase;text-align:center;margin-bottom:.9rem;display:flex;align-items:center;justify-content:center;gap:1.2rem}
+.s-tag::before,.s-tag::after{content:'';display:block;width:30px;height:1px;background:linear-gradient(90deg,transparent,var(--blood2))}
+.s-tag::after{transform:scaleX(-1)}
+.s-title{font-family:'Cinzel',serif;font-size:clamp(1.4rem,3.5vw,2.4rem);font-weight:700;color:var(--pale);text-align:center;letter-spacing:.12em;margin-bottom:3rem;text-shadow:0 0 40px rgba(200,154,24,.2)}
+.site-footer{position:relative;padding:3rem 2rem;text-align:center;background:var(--void);border-top:1px solid rgba(120,0,0,.3);overflow:hidden}
+.site-footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--crimson),var(--gold2),var(--crimson),transparent)}
+.ft-logo{font-family:'Cinzel Decorative',serif;font-size:1.2rem;font-weight:900;letter-spacing:.15em;color:transparent;background:linear-gradient(135deg,var(--gold) 30%,var(--gold3) 60%,var(--gold) 90%);-webkit-background-clip:text;background-clip:text;display:block;margin-bottom:.5rem}
+.ft-sub{font-family:'Orbitron',sans-serif;font-size:.38rem;letter-spacing:.55em;color:var(--dim);text-transform:uppercase;line-height:2}
+@keyframes spin-cw{to{transform:rotate(360deg)}}
+@keyframes spin-ccw{to{transform:rotate(-360deg)}}
+@keyframes border-flow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+`;
 
 function initBgCanvas(){
-  const cv = document.getElementById('bg-canvas');
-  if(!cv) return;
-  const cx = cv.getContext('2d');
-  let W, H;
-  function resize(){ W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
-  resize();
-  window.addEventListener('resize', resize);
-  const C = ['rgba(200,16,32,','rgba(184,100,8,','rgba(232,184,48,','rgba(120,0,120,','rgba(80,0,140,'];
-  const pts = Array.from({length:130}, () => ({
-    x: Math.random()*9999, y: Math.random()*9999, r: Math.random()*1.3 + .2,
-    vx: (Math.random()-.5)*.1, vy: (Math.random()-.5)*.1,
-    c: C[Math.floor(Math.random()*C.length)], a: Math.random()*.4 + .08
-  }));
+  const cv=document.getElementById('bg-canvas');if(!cv)return;
+  const cx=cv.getContext('2d');let W,H;
+  function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  const C=['rgba(200,16,32,','rgba(184,100,8,','rgba(232,184,48,','rgba(120,0,120,','rgba(80,0,140,'];
+  const pts=Array.from({length:130},()=>({x:Math.random()*9999,y:Math.random()*9999,r:Math.random()*1.3+.2,vx:(Math.random()-.5)*.1,vy:(Math.random()-.5)*.1,c:C[Math.floor(Math.random()*C.length)],a:Math.random()*.4+.08}));
   function tick(){
     cx.clearRect(0,0,W,H);
-    pts.forEach(p => {
-      p.x += p.vx; p.y += p.vy;
-      if(p.x<0) p.x=W; if(p.x>W) p.x=0;
-      if(p.y<0) p.y=H; if(p.y>H) p.y=0;
-      cx.beginPath();
-      cx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      cx.fillStyle = p.c + p.a + ')';
-      cx.fill();
-    });
+    pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fillStyle=p.c+p.a+')';cx.fill()});
     requestAnimationFrame(tick);
   }
   tick();

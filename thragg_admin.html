@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — THRAGG</title>
+<style id="shared-inject"></style>
+<style>
+/* ── LOGIN SCREEN ── */
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;position:relative;z-index:1}
+.login-glow{position:fixed;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(120,0,20,.2),transparent 70%),linear-gradient(180deg,var(--void),var(--abyss) 40%,var(--void))}
+.login-card{width:100%;max-width:420px;position:relative}
+.login-seal-wrap{display:flex;justify-content:center;margin-bottom:2rem}
+.login-seal{width:72px;height:72px;animation:spin-cw 20s linear infinite;opacity:.6}
+.login-title{font-family:'Cinzel Decorative',serif;font-size:1.6rem;font-weight:900;letter-spacing:.18em;color:transparent;background:linear-gradient(135deg,var(--gold2),var(--gold3),var(--gold2));-webkit-background-clip:text;background-clip:text;text-align:center;margin-bottom:.4rem}
+.login-sub{font-family:'Orbitron',sans-serif;font-size:.42rem;letter-spacing:.6em;color:var(--dim);text-transform:uppercase;text-align:center;margin-bottom:2.5rem}
+.login-box{background:linear-gradient(160deg,var(--deep2),var(--deep));border:1px solid rgba(170,0,16,.35);padding:2.5rem;position:relative}
+.login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--blood2),var(--crimson),var(--blood2),transparent)}
+.lf-label{font-family:'Orbitron',sans-serif;font-size:.4rem;letter-spacing:.5em;color:var(--dim);text-transform:uppercase;display:block;margin-bottom:.5rem}
+.lf-input{width:100%;background:rgba(0,0,0,.55);border:1px solid rgba(120,0,0,.4);color:var(--text);font-family:'Cinzel',serif;font-size:.88rem;padding:.8rem 1rem;margin-bottom:1.4rem;outline:none;letter-spacing:.05em;transition:border-color .2s}
+.lf-input:focus{border-color:var(--crimson)}
+.lf-btn{width:100%;padding:.95rem;background:linear-gradient(135deg,var(--blood),var(--blood2));border:none;border-top:1px solid rgba(204,16,32,.4);color:var(--pale);font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.lf-btn:hover{background:linear-gradient(135deg,var(--blood2),var(--crimson))}
+.lf-error{font-family:'Orbitron',sans-serif;font-size:.38rem;letter-spacing:.4em;color:var(--crimson);text-transform:uppercase;text-align:center;margin-top:1rem;display:none}
+.lf-error.show{display:block}
+
+/* ── DASHBOARD ── */
+.dash-page{display:none;min-height:100vh;position:relative;z-index:1;padding:80px 0 3rem}
+.dash-page.active{display:block}
+.dash-inner{max-width:1180px;margin:0 auto;padding:0 2rem}
+
+/* header */
+.dash-header{display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:1.8rem;border-bottom:1px solid rgba(120,0,0,.3);margin-bottom:2rem;flex-wrap:wrap;gap:1rem}
+.dash-logo{font-family:'Cinzel Decorative',serif;font-size:1.3rem;font-weight:900;letter-spacing:.15em;color:transparent;background:linear-gradient(90deg,var(--gold2),var(--gold3));-webkit-background-clip:text;background-clip:text}
+.dash-who{font-family:'Orbitron',sans-serif;font-size:.38rem;letter-spacing:.5em;color:var(--dim);text-transform:uppercase;margin-top:.4rem}
+.dash-who span{color:var(--crimson)}
+.dash-role-badge{display:inline-flex;align-items:center;gap:.4rem;font-family:'Orbitron',sans-serif;font-size:.35rem;letter-spacing:.45em;color:var(--gold3);text-transform:uppercase;padding:.3rem .8rem;border:1px solid rgba(200,154,24,.35);background:rgba(200,154,24,.05);margin-top:.4rem}
+.logout-btn{background:none;border:1px solid rgba(120,0,0,.4);color:var(--muted);font-family:'Orbitron',sans-serif;font-size:.36rem;letter-spacing:.4em;text-transform:uppercase;padding:.45rem 1.1rem;cursor:pointer;transition:all .2s}
+.logout-btn:hover{border-color:var(--crimson);color:var(--crimson)}
+
+/* tabs */
+.dash-tabs{display:flex;gap:0;margin-bottom:2rem;border-bottom:1px solid rgba(120,0,0,.25);flex-wrap:wrap}
+.dash-tab{font-family:'Orbitron',sans-serif;font-size:.38rem;letter-spacing:.5em;color:var(--dim);text-transform:uppercase;padding:.75rem 1.4rem;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;margin-bottom:-1px}
+.dash-tab:hover{color:var(--muted)}
+.dash-tab.active{color:var(--gold3);border-bottom-color:var(--crimson)}
+
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* section title */
+.sec-h{font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:.2em;color:var(--gold3);text-transform:uppercase;margin:0 0 1.2rem;padding-bottom:.6rem;border-bottom:1px solid rgba(120,0,0,.22);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+
+/* stat grid */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem;margin-bottom:2rem}
+.stat-card{background:linear-gradient(160deg,var(--deep2),var(--deep));border:1px solid rgba(120,0,0,.3);border-top:2px solid var(--blood2);padding:1.4rem 1.2rem;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top left,rgba(155,0,0,.08),transparent 70%);pointer-events:none}
+.sc-lbl{font-family:'Orbitron',sans-serif;font-size:.35rem;letter-spacing:.5em;color:var(--dim);text-transform:uppercase;display:block;margin-bottom:.5rem}
+.sc-val{font-family:'Cinzel',serif;font-size:2rem;font-weight:700;color:var(--gold3);display:block;line-height:1;margin-bottom:.3rem;text-shadow:0 0 15px rgba(232,184,48,.25)}
+.sc-sub{font-family:'Cormorant Garamond',serif;font-size:.75rem;font-style:italic;color:var(--muted);display:block}
+
+/* bar chart */
+.chart-wrap{background:var(--deep);border:1px solid rgba(120,0,0,.22);padding:1.2rem 1rem 1rem;margin-bottom:.8rem}
+.chart-bars{display:flex;align-items:flex-end;gap:5px;height:90px}
+.chart-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.chart-bar{width:100%;background:linear-gradient(180deg,var(--crimson),var(--blood));min-height:2px;position:relative;transition:height .4s ease;cursor:default}
+.chart-bar:hover{background:linear-gradient(180deg,var(--ember),var(--crimson))}
+.chart-bar-val{font-family:'Orbitron',sans-serif;font-size:.28rem;color:var(--dim);text-align:center}
+.chart-day{font-family:'Orbitron',sans-serif;font-size:.28rem;letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
+
+/* database table */
+.db-table-wrap{overflow-x:auto;background:var(--deep);border:1px solid rgba(120,0,0,.22);max-height:420px;overflow-y:auto}
+.db-table-wrap::-webkit-scrollbar{width:3px;height:3px}
+.db-table-wrap::-webkit-scrollbar-track{background:var(--abyss)}
+.db-table-wrap::-webkit-scrollbar-thumb{background:var(--blood)}
+.db-table{width:100%;border-collapse:collapse;font-size:.75rem;min-width:600px}
+.db-table thead th{font-family:'Orbitron',sans-serif;font-size:.33rem;letter-spacing:.5em;color:var(--dim);text-transform:uppercase;padding:.7rem 1rem;text-align:left;background:var(--deep2);border-bottom:1px solid rgba(120,0,0,.3);position:sticky;top:0}
+.db-table tbody tr{border-bottom:1px solid rgba(120,0,0,.12);transition:background .2s}
+.db-table tbody tr:hover{background:rgba(120,0,0,.08)}
+.db-table tbody td{font-family:'Cormorant Garamond',serif;font-size:.82rem;color:var(--muted);padding:.65rem 1rem;font-style:italic}
+.db-table tbody td:first-child{color:var(--text);font-style:normal;font-family:'Orbitron',sans-serif;font-size:.32rem;letter-spacing:.2em}
+.db-table tbody td.page-badge{font-style:normal;font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold3)}
+.db-table tbody td.browser-badge{font-style:normal;font-family:'Orbitron',sans-serif;font-size:.32rem;letter-spacing:.2em;color:var(--crimson)}
+.db-empty{padding:2rem;text-align:center;font-family:'Orbitron',sans-serif;font-size:.38rem;letter-spacing:.4em;color:var(--dim);text-transform:uppercase}
+
+/* activity log */
+.log-list{background:var(--deep);border:1px solid rgba(120,0,0,.22);max-height:300px;overflow-y:auto}
+.log-list::-webkit-scrollbar{width:3px}
+.log-list::-webkit-scrollbar-track{background:var(--abyss)}
+.log-list::-webkit-scrollbar-thumb{background:var(--blood)}
+.log-item{padding:.7rem 1rem;border-bottom:1px solid rgba(120,0,0,.12);display:flex;align-items:center;gap:.9rem}
+.log-dot{width:6px;height:6px;flex-shrink:0;clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%)}
+.log-dot.info{background:var(--gold2)}
+.log-dot.play{background:var(--crimson)}
+.log-dot.admin{background:var(--gold3)}
+.log-time{font-family:'Orbitron',sans-serif;font-size:.3rem;letter-spacing:.25em;color:var(--dim);min-width:90px}
+.log-msg{font-family:'Cormorant Garamond',serif;font-size:.82rem;font-style:italic;color:var(--muted)}
+
+/* credentials */
+.cred-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.cred-card{background:var(--deep);border:1px solid rgba(120,0,0,.25);border-top:2px solid var(--blood2);padding:1.2rem;position:relative}
+.cred-card.master-card{border-top-color:var(--gold2)}
+.cred-user{font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;color:var(--pale);letter-spacing:.08em;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.cred-role{font-family:'Orbitron',sans-serif;font-size:.3rem;letter-spacing:.4em;text-transform:uppercase;padding:.15rem .5rem;border:1px solid;display:inline-block}
+.cred-role.master{color:var(--gold3);border-color:rgba(200,154,24,.4);background:rgba(200,154,24,.05)}
+.cred-role.guest{color:var(--crimson);border-color:rgba(200,16,32,.4);background:rgba(200,16,32,.05)}
+.cred-role.revoked{color:var(--dim);border-color:rgba(80,64,64,.4)}
+.cred-info{font-family:'Orbitron',sans-serif;font-size:.3rem;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;margin-top:.5rem}
+.cred-pass-row{display:flex;align-items:center;gap:.5rem;margin-top:.4rem}
+.cred-pass{font-family:'Orbitron',sans-serif;font-size:.32rem;letter-spacing:.2em;color:var(--muted);background:rgba(0,0,0,.4);padding:.25rem .6rem;border:1px solid rgba(120,0,0,.25);flex:1;word-break:break-all}
+.cred-actions{display:flex;gap:.5rem;margin-top:.8rem}
+.cred-btn{font-family:'Orbitron',sans-serif;font-size:.3rem;letter-spacing:.35em;text-transform:uppercase;padding:.3rem .7rem;border:1px solid;background:none;cursor:pointer;transition:all .2s}
+.cred-btn.revoke{color:var(--dim);border-color:rgba(80,64,64,.4)}
+.cred-btn.revoke:hover{color:var(--crimson);border-color:var(--crimson)}
+.cred-btn.del{color:rgba(200,16,32,.4);border-color:rgba(200,16,32,.25)}
+.cred-btn.del:hover{color:var(--fire);border-color:var(--fire)}
+.cred-btn.restore{color:rgba(200,154,24,.5);border-color:rgba(200,154,24,.3)}
+.cred-btn.restore:hover{color:var(--gold3);border-color:var(--gold3)}
+
+/* generator */
+.gen-box{background:linear-gradient(160deg,var(--deep2),var(--deep));border:1px solid rgba(120,0,0,.3);border-top:2px solid var(--blood2);padding:2rem;margin-bottom:1.5rem;position:relative}
+.gen-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--blood2),var(--crimson),var(--blood2),transparent)}
+.gen-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.gen-label{font-family:'Orbitron',sans-serif;font-size:.38rem;letter-spacing:.5em;color:var(--dim);text-transform:uppercase;display:block;margin-bottom:.4rem}
+.gen-input{width:100%;background:rgba(0,0,0,.5);border:1px solid rgba(120,0,0,.35);color:var(--text);font-family:'Cinzel',serif;font-size:.82rem;padding:.65rem .85rem;outline:none;letter-spacing:.05em;transition:border-color .2s}
+.gen-input:focus{border-color:var(--crimson)}
+.gen-input[readonly]{color:var(--gold3);letter-spacing:.08em}
+.gen-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.2rem}
+.gen-btn{padding:.7rem 1.6rem;border:none;font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.gen-btn.primary{background:linear-gradient(135deg,var(--blood),var(--blood2));color:var(--pale)}
+.gen-btn.primary:hover{background:linear-gradient(135deg,var(--blood2),var(--crimson))}
+.gen-btn.secondary{background:none;border:1px solid rgba(120,0,0,.4);color:var(--muted)}
+.gen-btn.secondary:hover{border-color:var(--gold2);color:var(--gold2)}
+
+/* small action btn */
+.action-btn{font-family:'Orbitron',sans-serif;font-size:.32rem;letter-spacing:.4em;text-transform:uppercase;padding:.35rem .85rem;border:1px solid rgba(120,0,0,.35);background:none;color:var(--dim);cursor:pointer;transition:all .2s}
+.action-btn:hover{border-color:var(--crimson);color:var(--crimson)}
+.action-btn.gold:hover{border-color:var(--gold2);color:var(--gold2)}
+
+/* feedback msg */
+.feedback{font-family:'Orbitron',sans-serif;font-size:.36rem;letter-spacing:.5em;text-transform:uppercase;padding:.4rem .9rem;opacity:0;transition:opacity .3s;display:inline-block}
+.feedback.ok{color:var(--gold3)}
+.feedback.err{color:var(--crimson)}
+.feedback.show{opacity:1}
+
+@media(max-width:700px){.cred-grid{grid-template-columns:1fr}.gen-row{grid-template-columns:1fr}.dash-tabs{gap:.3rem}}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div id="nav-mount"></div>
+
+<!-- ── LOGIN ── -->
+<div class="login-page" id="login-pg">
+  <div class="login-glow"></div>
+  <div class="login-card">
+    <div class="login-seal-wrap">
+      <svg class="login-seal" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="46" stroke="#7A0000" stroke-width="1"/>
+        <circle cx="50" cy="50" r="35" stroke="#AA0010" stroke-width="1"/>
+        <polygon points="50,10 56,44 50,90 44,44" fill="rgba(180,0,20,.3)" stroke="#CC1020" stroke-width="1"/>
+        <polygon points="10,50 44,44 90,50 44,56" fill="rgba(180,0,20,.2)" stroke="#8A0000" stroke-width=".8"/>
+        <circle cx="50" cy="50" r="8" fill="rgba(168,120,8,.3)" stroke="#A87808" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="login-title">ACESSO RESTRITO</div>
+    <div class="login-sub">Painel do Grão-Regente · Viltrum</div>
+    <div class="login-box">
+      <label class="lf-label">Usuário</label>
+      <input class="lf-input" id="lf-user" type="text" placeholder="Identificação imperial" autocomplete="off">
+      <label class="lf-label">Senha</label>
+      <input class="lf-input" id="lf-pass" type="password" placeholder="Código de acesso">
+      <button class="lf-btn" onclick="doLogin()">Entrar no Império</button>
+      <div class="lf-error" id="lf-error">⬛ Acesso negado — credenciais inválidas</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div class="dash-page" id="dash-pg">
+  <div class="dash-inner">
+    <div class="dash-header">
+      <div>
+        <div class="dash-logo">THRAGG · Painel Imperial</div>
+        <div class="dash-who">Sessão: <span id="dash-username">—</span></div>
+        <div class="dash-role-badge" id="dash-role-badge">● Grão-Regente</div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">✕ Encerrar Sessão</button>
+    </div>
+
+    <div class="dash-tabs">
+      <button class="dash-tab active" onclick="switchTab('database',this)">◆ Database</button>
+      <button class="dash-tab" onclick="switchTab('stats',this)">◆ Estatísticas</button>
+      <button class="dash-tab" onclick="switchTab('activity',this)">◆ Atividade</button>
+      <button class="dash-tab" id="tab-cred-btn" onclick="switchTab('credenciais',this)">◆ Credenciais</button>
+    </div>
+
+    <!-- DATABASE TAB -->
+    <div class="tab-panel active" id="tab-database">
+      <div class="sec-h">
+        Registro de Visitas Anônimas
+        <div style="display:flex;gap:.6rem;align-items:center">
+          <button class="action-btn" onclick="refreshDB()">↺ Atualizar</button>
+          <button class="action-btn" onclick="clearDB()">⬛ Limpar Base</button>
+        </div>
+      </div>
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.82rem;color:var(--dim);margin-bottom:1.2rem">Dados coletados: horário, página visitada, navegador e sistema operacional. Nenhum dado pessoal identificável.</p>
+      <div class="db-table-wrap">
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Horário</th><th>Página</th><th>Navegador</th><th>Sistema</th><th>Idioma</th><th>Tela</th>
+            </tr>
+          </thead>
+          <tbody id="db-tbody">
+            <tr><td colspan="7"><div class="db-empty">Nenhum registro encontrado.</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:.8rem;font-family:'Orbitron',sans-serif;font-size:.32rem;letter-spacing:.4em;color:var(--dim);text-transform:uppercase">
+        Total registrado: <span id="db-count" style="color:var(--crimson)">0</span> visitas
+      </div>
+    </div>
+
+    <!-- STATS TAB -->
+    <div class="tab-panel" id="tab-stats">
+      <div class="sec-h">Estatísticas Gerais
+        <button class="action-btn" onclick="resetAllStats()">⬛ Zerar Tudo</button>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><span class="sc-lbl">Visitas Totais</span><span class="sc-val" id="sc-total">0</span><span class="sc-sub">Desde o início</span></div>
+        <div class="stat-card"><span class="sc-lbl">Visitas Hoje</span><span class="sc-val" id="sc-today">0</span><span class="sc-sub" id="sc-today-sub">—</span></div>
+        <div class="stat-card"><span class="sc-lbl">Pico Diário</span><span class="sc-val" id="sc-peak">0</span><span class="sc-sub" id="sc-peak-sub">—</span></div>
+        <div class="stat-card"><span class="sc-lbl">Média / 7 dias</span><span class="sc-val" id="sc-avg">0</span><span class="sc-sub">Últimos 7 dias</span></div>
+        <div class="stat-card"><span class="sc-lbl">Plays do Hino</span><span class="sc-val" id="sc-plays">0</span><span class="sc-sub">Reproduções totais</span></div>
+        <div class="stat-card"><span class="sc-lbl">Plays do Vídeo</span><span class="sc-val" id="sc-video">0</span><span class="sc-sub">Reproduções totais</span></div>
+      </div>
+      <div class="sec-h" style="margin-top:1.5rem">Visitas — Últimos 7 Dias</div>
+      <div class="chart-wrap"><div class="chart-bars" id="chart-bars"></div></div>
+    </div>
+
+    <!-- ACTIVITY TAB -->
+    <div class="tab-panel" id="tab-activity">
+      <div class="sec-h">Log de Atividade
+        <button class="action-btn" onclick="clearActivity()">⬛ Limpar Log</button>
+      </div>
+      <div class="log-list" id="log-list">
+        <div class="db-empty">Nenhuma atividade registrada.</div>
+      </div>
+    </div>
+
+    <!-- CREDENTIALS TAB (master only) -->
+    <div class="tab-panel" id="tab-credenciais">
+      <div class="sec-h">Gerador de Acesso Convidado</div>
+      <div class="gen-box">
+        <div class="gen-row">
+          <div>
+            <label class="gen-label">Apelido / Identificação</label>
+            <input class="gen-input" id="gen-label" placeholder="Ex: Luiz, Amigo 1...">
+          </div>
+          <div>
+            <label class="gen-label">Usuário gerado</label>
+            <input class="gen-input" id="gen-user" readonly placeholder="— clique em Gerar —">
+          </div>
+        </div>
+        <div>
+          <label class="gen-label">Senha gerada</label>
+          <input class="gen-input" id="gen-pass" readonly placeholder="— clique em Gerar —">
+        </div>
+        <div class="gen-actions">
+          <button class="gen-btn primary" onclick="generateNew()">◆ Gerar Credencial</button>
+          <button class="gen-btn secondary" onclick="saveGenerated()">⬛ Salvar e Ativar</button>
+          <span class="feedback ok" id="gen-feedback"></span>
+        </div>
+      </div>
+
+      <div class="sec-h" style="margin-top:2rem">Credenciais Ativas</div>
+      <div class="cred-grid" id="cred-grid">
+        <!-- rendered by JS -->
+      </div>
+    </div>
+
+  </div><!-- /dash-inner -->
+</div><!-- /dash-pg -->
+
+<script src="thragg_data.js"></script>
+<script>
+document.getElementById('shared-inject').textContent = SHARED_CSS;
+document.getElementById('nav-mount').innerHTML = renderNav('admin');
+initBgCanvas();
+// don't bump visit on admin page
+DB.log('Página de admin acessada','admin');
+
+/* ── AUTH ── */
+let currentUser = null;
+
+function doLogin(){
+  const u = document.getElementById('lf-user').value.trim();
+  const p = document.getElementById('lf-pass').value;
+  const result = DB.checkLogin(u, p);
+  if(result.ok){
+    currentUser = result;
+    document.getElementById('login-pg').style.display = 'none';
+    document.getElementById('dash-pg').classList.add('active');
+    document.getElementById('dash-username').textContent = result.user;
+    document.getElementById('dash-role-badge').textContent = '● ' + (result.role || 'Convidado');
+    // hide credentials tab for guests
+    const credTab = document.getElementById('tab-cred-btn');
+    if(!result.master){ credTab.style.display = 'none'; }
+    else { credTab.style.display = ''; }
+    DB.log('Login bem-sucedido: ' + result.user,'admin');
+    renderAll();
+  } else {
+    document.getElementById('lf-error').classList.add('show');
+    document.getElementById('lf-pass').value = '';
+  }
+}
+
+function doLogout(){
+  currentUser = null;
+  document.getElementById('login-pg').style.display = 'flex';
+  document.getElementById('dash-pg').classList.remove('active');
+  document.getElementById('lf-user').value = '';
+  document.getElementById('lf-pass').value = '';
+  document.getElementById('lf-error').classList.remove('show');
+}
+
+/* ── TABS ── */
+function switchTab(id, btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.dash-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  renderAll();
+}
+
+/* ── RENDER DATABASE ── */
+function renderDB(){
+  const tbody = document.getElementById('db-tbody');
+  const v = DB.getVisits();
+  const log = v.log || [];
+  document.getElementById('db-count').textContent = log.length;
+  if(!log.length){
+    tbody.innerHTML = '<tr><td colspan="7"><div class="db-empty">Nenhum registro encontrado.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = log.map((e,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td>${e.time}</td>
+      <td class="page-badge">${e.page}</td>
+      <td class="browser-badge">${e.browser}</td>
+      <td>${e.os}</td>
+      <td>${e.lang}</td>
+      <td>${e.screen}</td>
+    </tr>
+  `).join('');
+}
+
+function clearDB(){
+  if(!confirm('Limpar toda a base de visitas?'))return;
+  DB.resetVisits();
+  DB.log('Base de dados de visitas limpa pelo administrador','admin');
+  renderDB();
+  renderStats();
+}
+function refreshDB(){ renderDB(); }
+
+/* ── RENDER STATS ── */
+function renderStats(){
+  const v = DB.getVisits(), p = DB.getPlays();
+  const today = new Date(), dk = today.toISOString().slice(0,10);
+  const days = v.days || {};
+  document.getElementById('sc-total').textContent = (v.total||0).toLocaleString('pt-BR');
+  document.getElementById('sc-today').textContent = (days[dk]||0);
+  document.getElementById('sc-today-sub').textContent = today.toLocaleDateString('pt-BR',{day:'2-digit',month:'long'});
+  let peak=0,peakDate='—';
+  Object.entries(days).forEach(([k,val])=>{ if(val>peak){peak=val;peakDate=k} });
+  document.getElementById('sc-peak').textContent = peak;
+  document.getElementById('sc-peak-sub').textContent = peakDate!=='—' ? new Date(peakDate+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+  let sum=0;
+  for(let i=0;i<7;i++){const d=new Date(today);d.setDate(d.getDate()-i);sum+=(days[d.toISOString().slice(0,10)]||0)}
+  document.getElementById('sc-avg').textContent = Math.round(sum/7);
+  document.getElementById('sc-plays').textContent = (p.audio||0);
+  document.getElementById('sc-video').textContent = (p.video||0);
+  renderChart();
+}
+
+function renderChart(){
+  const bars = document.getElementById('chart-bars'); if(!bars)return;
+  bars.innerHTML = '';
+  const v = DB.getVisits(), days = v.days||{}, today = new Date();
+  const keys=[];
+  for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(d.getDate()-i);keys.push(d.toISOString().slice(0,10))}
+  const vals = keys.map(k=>days[k]||0);
+  const mx = Math.max(...vals,1);
+  keys.forEach((k,i)=>{
+    const col=document.createElement('div');col.className='chart-bar-col';
+    const val=document.createElement('div');val.className='chart-bar-val';val.textContent=vals[i]||'';
+    const bar=document.createElement('div');bar.className='chart-bar';bar.style.height=Math.max((vals[i]/mx)*80,2)+'px';bar.title=`${k}: ${vals[i]}`;
+    const lbl=document.createElement('div');lbl.className='chart-day';
+    lbl.textContent=new Date(k+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'short'}).slice(0,3);
+    col.appendChild(val);col.appendChild(bar);col.appendChild(lbl);bars.appendChild(col);
+  });
+}
+
+function resetAllStats(){
+  if(!confirm('Zerar TODAS as estatísticas permanentemente?'))return;
+  DB.resetVisits();DB.resetPlays();
+  DB.log('Todas as estatísticas zeradas pelo administrador','admin');
+  renderStats();renderDB();
+}
+
+/* ── RENDER ACTIVITY ── */
+function renderActivity(){
+  const list = document.getElementById('log-list'); if(!list)return;
+  const logs = DB.getLog();
+  if(!logs.length){ list.innerHTML='<div class="db-empty">Nenhuma atividade registrada.</div>'; return; }
+  list.innerHTML = logs.map(e=>`
+    <div class="log-item">
+      <div class="log-dot ${e.type||'info'}"></div>
+      <div class="log-time">${e.time}</div>
+      <div class="log-msg">${e.msg}</div>
+    </div>
+  `).join('');
+}
+function clearActivity(){ if(!confirm('Limpar todo o log?'))return; DB.clearLog(); renderActivity(); }
+
+/* ── RENDER CREDENTIALS ── */
+function renderCreds(){
+  const grid = document.getElementById('cred-grid'); if(!grid)return;
+  const list = DB.getCreds();
+  const master = DB.MASTER;
+  let html = `
+    <div class="cred-card master-card">
+      <div class="cred-user">
+        ${master.user} <span class="cred-role master">${master.role}</span>
+      </div>
+      <div class="cred-pass-row">
+        <div class="cred-pass">••••••••••••••</div>
+      </div>
+      <div class="cred-info">Credencial Permanente · Não pode ser removida</div>
+    </div>
+  `;
+  if(!list.length){ html += '<div style="font-family:\'Orbitron\',sans-serif;font-size:.35rem;letter-spacing:.45em;color:var(--dim);text-transform:uppercase;padding:1.5rem;grid-column:1/-1">Nenhum convidado adicionado ainda.</div>'; }
+  list.forEach(c=>{
+    html += `
+      <div class="cred-card">
+        <div class="cred-user">
+          ${c.user}
+          <span class="cred-role ${c.active?'guest':'revoked'}">${c.active?'Convidado':'Revogado'}</span>
+        </div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:.3rem;letter-spacing:.35em;color:var(--dim);text-transform:uppercase;margin-bottom:.3rem">${c.label||'Sem apelido'}</div>
+        <div class="cred-pass-row">
+          <div class="cred-pass" id="pass-${c.user}">••••••••</div>
+          <button class="action-btn gold" style="font-size:.28rem;padding:.2rem .5rem" onclick="togglePass('${c.user}','${c.pass}')">Ver</button>
+        </div>
+        <div class="cred-info">Criado: ${c.created}</div>
+        <div class="cred-actions">
+          ${c.active
+            ? `<button class="cred-btn revoke" onclick="revokeCred('${c.user}')">Revogar</button>`
+            : `<button class="cred-btn restore" onclick="restoreCred('${c.user}')">Restaurar</button>`
+          }
+          <button class="cred-btn del" onclick="deleteCred('${c.user}')">Excluir</button>
+        </div>
+      </div>
+    `;
+  });
+  grid.innerHTML = html;
+}
+
+function togglePass(user, pass){
+  const el = document.getElementById('pass-'+user);
+  if(el){ el.textContent = el.textContent.includes('•') ? pass : '••••••••'; }
+}
+function revokeCred(user){ DB.revokeCred(user); DB.log('Credencial revogada: '+user,'admin'); renderCreds(); }
+function restoreCred(user){
+  const list = DB.getCreds().map(c=>c.user===user?{...c,active:true}:c);
+  DB.set('tg_creds',list);
+  DB.log('Credencial restaurada: '+user,'admin');
+  renderCreds();
+}
+function deleteCred(user){
+  if(!confirm('Excluir permanentemente: '+user+'?'))return;
+  DB.deleteCred(user);
+  DB.log('Credencial excluída: '+user,'admin');
+  renderCreds();
+}
+
+/* ── GENERATOR ── */
+function generateNew(){
+  const cred = generateCredential(document.getElementById('gen-label').value||'Convidado');
+  document.getElementById('gen-user').value = cred.user;
+  document.getElementById('gen-pass').value = cred.pass;
+}
+function saveGenerated(){
+  const user = document.getElementById('gen-user').value.trim();
+  const pass = document.getElementById('gen-pass').value.trim();
+  const label = document.getElementById('gen-label').value.trim();
+  const fb = document.getElementById('gen-feedback');
+  if(!user||!pass){ fb.textContent='⬛ Gere uma credencial primeiro'; fb.className='feedback err show'; setTimeout(()=>fb.classList.remove('show'),2500); return; }
+  // check duplicate
+  const exists = DB.getCreds().find(c=>c.user===user);
+  if(exists){ fb.textContent='⬛ Usuário já existe'; fb.className='feedback err show'; setTimeout(()=>fb.classList.remove('show'),2500); return; }
+  DB.addCred(user, pass, label);
+  DB.log('Nova credencial criada: '+user+' ('+label+')','admin');
+  fb.textContent='✦ Credencial ativada com sucesso'; fb.className='feedback ok show';
+  setTimeout(()=>fb.classList.remove('show'),2500);
+  document.getElementById('gen-user').value='';
+  document.getElementById('gen-pass').value='';
+  document.getElementById('gen-label').value='';
+  renderCreds();
+}
+
+/* ── RENDER ALL ── */
+function renderAll(){
+  renderDB();
+  renderStats();
+  renderActivity();
+  if(currentUser?.master) renderCreds();
+}
+
+/* ── KEY BINDINGS ── */
+document.getElementById('lf-pass').addEventListener('keydown',e=>{ if(e.key==='Enter')doLogin(); });
+document.getElementById('lf-user').addEventListener('keydown',e=>{ if(e.key==='Enter')document.getElementById('lf-pass').focus(); });
+</script>
+</body>
+</html>

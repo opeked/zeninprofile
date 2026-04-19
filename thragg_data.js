@@ -190,6 +190,8 @@ html{scroll-behavior:smooth}
 body{background:var(--void);color:var(--text);font-family:'Cormorant Garamond',serif;overflow-x:hidden;min-height:100vh}
 #bg-canvas{position:fixed;inset:0;pointer-events:none;z-index:0}
 body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.05) 2px,rgba(0,0,0,.05) 4px);pointer-events:none;z-index:9999}
+ 
+/* NAV */
 .site-nav{position:fixed;top:0;left:0;right:0;z-index:8000;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2.5rem;background:linear-gradient(180deg,rgba(2,0,8,.97),rgba(2,0,8,.75));border-bottom:1px solid rgba(170,0,16,.35);backdrop-filter:blur(10px)}
 .nav-logo{font-family:'Cinzel Decorative',serif;font-size:1rem;font-weight:900;letter-spacing:.2em;color:transparent;background:linear-gradient(90deg,var(--gold2),var(--gold3),var(--gold2));-webkit-background-clip:text;background-clip:text;text-decoration:none}
 .nav-links{display:flex;align-items:center;gap:0}
@@ -201,21 +203,36 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .nav-admin:hover,.nav-admin.active{color:var(--crimson)!important;background:rgba(200,16,32,.1)!important}
 .nav-visits{font-family:'Orbitron',sans-serif;font-size:.38rem;letter-spacing:.4em;color:var(--dim);text-transform:uppercase;display:flex;align-items:center;gap:.5rem}
 .nav-visits-num{color:var(--crimson);font-size:.55rem;font-weight:600}
+ 
+/* PAGE WRAPPER */
 .page-wrap{padding-top:60px;min-height:100vh;position:relative;z-index:1}
+ 
+/* SECTION COMMONS */
 .s-tag{font-family:'Orbitron',sans-serif;font-size:.46rem;letter-spacing:.75em;color:var(--blood2);text-transform:uppercase;text-align:center;margin-bottom:.9rem;display:flex;align-items:center;justify-content:center;gap:1.2rem}
 .s-tag::before,.s-tag::after{content:'';display:block;width:30px;height:1px;background:linear-gradient(90deg,transparent,var(--blood2))}
 .s-tag::after{transform:scaleX(-1)}
 .s-title{font-family:'Cinzel',serif;font-size:clamp(1.4rem,3.5vw,2.4rem);font-weight:700;color:var(--pale);text-align:center;letter-spacing:.12em;margin-bottom:3rem;text-shadow:0 0 40px rgba(200,154,24,.2)}
+ 
+/* FOOTER */
 .site-footer{position:relative;padding:3rem 2rem;text-align:center;background:var(--void);border-top:1px solid rgba(120,0,0,.3);overflow:hidden}
 .site-footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--crimson),var(--gold2),var(--crimson),transparent)}
 .ft-logo{font-family:'Cinzel Decorative',serif;font-size:1.2rem;font-weight:900;letter-spacing:.15em;color:transparent;background:linear-gradient(135deg,var(--gold) 30%,var(--gold3) 60%,var(--gold) 90%);-webkit-background-clip:text;background-clip:text;display:block;margin-bottom:.5rem}
 .ft-sub{font-family:'Orbitron',sans-serif;font-size:.38rem;letter-spacing:.55em;color:var(--dim);text-transform:uppercase;line-height:2}
+ 
+/* ANIMATIONS */
 @keyframes spin-cw{to{transform:rotate(360deg)}}
 @keyframes spin-ccw{to{transform:rotate(-360deg)}}
 @keyframes border-flow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes sweep{from{background-position:-200%}to{background-position:200%}}
 @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes name-in{0%{opacity:0;letter-spacing:.5em;filter:blur(28px)}100%{opacity:1;letter-spacing:.06em;filter:drop-shadow(0 0 50px rgba(200,154,24,.4))}}
+@keyframes gold-flow{0%{background-position:200% center}100%{background-position:-200% center}}
+@keyframes float-q{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes drip{0%{height:0;opacity:1}75%{opacity:1}100%{height:60px;opacity:0}}
+@keyframes pip-pulse{0%,100%{box-shadow:0 0 12px var(--fire),0 0 30px rgba(232,48,32,.3)}50%{box-shadow:0 0 25px var(--ember),0 0 60px rgba(232,48,32,.6)}}
 `;
-
+ 
+/* ── PARTICLE BACKGROUND (shared init) ── */
 function initBgCanvas(){
   const cv=document.getElementById('bg-canvas');if(!cv)return;
   const cx=cv.getContext('2d');let W,H;
@@ -225,6 +242,9 @@ function initBgCanvas(){
   const pts=Array.from({length:130},()=>({x:Math.random()*9999,y:Math.random()*9999,r:Math.random()*1.3+.2,vx:(Math.random()-.5)*.1,vy:(Math.random()-.5)*.1,c:C[Math.floor(Math.random()*C.length)],a:Math.random()*.4+.08}));
   function tick(){
     cx.clearRect(0,0,W,H);
+    [{x:.3,y:.4,r:.4,col:'rgba(80,0,100,.04)'},{x:.75,y:.6,r:.35,col:'rgba(100,0,20,.05)'}].forEach(g=>{
+      const gr=cx.createRadialGradient(W*g.x,H*g.y,0,W*g.x,H*g.y,W*g.r);gr.addColorStop(0,g.col);gr.addColorStop(1,'transparent');cx.fillStyle=gr;cx.fillRect(0,0,W,H);
+    });
     pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fillStyle=p.c+p.a+')';cx.fill()});
     requestAnimationFrame(tick);
   }

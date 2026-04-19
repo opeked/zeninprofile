@@ -269,15 +269,17 @@ function renderDB(){
     return;
   }
 
-  tbody.innerHTML = log.map((e,i)=>`
+  tbody.innerHTML = log.map((e,i) => `
     <tr>
       <td>${i+1}</td>
       <td>${e.time}</td>
       <td class="page-badge">${e.page}</td>
       <td class="browser-badge">${e.browser}</td>
       <td>${e.os}</td>
-      <td style="font-family:'Orbitron',sans-serif;color:var(--crimson);font-size:.8rem">${e.ip || '—'}</td>
-      <td style="font-size:.82rem">${e.location || '—'}</td>
+      <td style="font-family:'Orbitron',sans-serif;color:var(--crimson);font-size:.82rem; font-weight:600">
+        ${e.ip || '—'}
+      </td>
+      <td style="font-size:.82rem;color:var(--muted)">${e.location || '—'}</td>
       <td>${e.screen}</td>
     </tr>
   `).join('');

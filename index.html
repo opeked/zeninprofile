@@ -6,15 +6,7 @@
 <title>THRAGG • Império Viltrumita</title>
 <style id="shared-inject"></style>
 <style>
-/* ESTILO PRINCIPAL - Mantido igual ao tema das outras páginas */
-body { 
-    margin:0; 
-    padding:0; 
-    background:var(--void); 
-    color:var(--text); 
-    overflow-x:hidden; 
-}
-
+/* Hero Principal */
 .hero-index {
     position:relative;
     min-height:100vh;
@@ -28,8 +20,8 @@ body {
 .index-glow {
     position:absolute;
     inset:0;
-    background:radial-gradient(ellipse 75% 65% at 50% 45%, rgba(180,0,20,.28) 0%, transparent 70%),
-                linear-gradient(180deg, var(--void) 0%, var(--abyss) 35%, var(--deep) 70%, var(--void) 100%);
+    background:radial-gradient(ellipse 80% 60% at 50% 50%, rgba(180,0,20,.28) 0%, transparent 70%),
+                linear-gradient(180deg, var(--void) 0%, var(--abyss) 40%, var(--deep) 75%, var(--void) 100%);
 }
 
 .seal-wrap-index {
@@ -39,26 +31,23 @@ body {
     align-items:center;
     justify-content:center;
     pointer-events:none;
-    opacity:0.065;
+    opacity:0.07;
 }
 
 .seal-wrap-index svg {
-    width: min(820px, 96vw);
-    height: min(820px, 96vw);
+    width: min(800px, 95vw);
+    height: min(800px, 95vw);
 }
 
-.hero-content-index {
-    position:relative;
-    z-index:10;
-}
+.hero-content-index { position:relative; z-index:10; }
 
 .hero-eyebrow {
     font-family:'Orbitron',sans-serif;
     font-size:.54rem;
-    letter-spacing:.98em;
+    letter-spacing:.95em;
     color:var(--crimson);
     text-transform:uppercase;
-    margin-bottom:2.4rem;
+    margin-bottom:2.2rem;
     display:flex;
     align-items:center;
     gap:1.8rem;
@@ -69,140 +58,138 @@ body {
 
 .hero-eyebrow::before,
 .hero-eyebrow::after {
-    content:''; 
-    display:block; 
-    width:68px; 
-    height:1px;
+    content:''; display:block; width:65px; height:1px;
     background:linear-gradient(90deg, transparent, var(--crimson));
 }
 .hero-eyebrow::after { transform:scaleX(-1); }
 
 .hero-name-index {
     font-family:'Cinzel Decorative',serif;
-    font-size:clamp(4.5rem, 15vw, 10rem);
+    font-size:clamp(4.4rem, 14vw, 9.8rem);
     font-weight:900;
-    line-height:.82;
-    letter-spacing:.04em;
+    line-height:.83;
+    letter-spacing:.05em;
     color:transparent;
     background:linear-gradient(155deg, #FFF8E0 0%, var(--pale) 15%, var(--gold3) 33%, var(--gold2) 50%, #FFF5D0 57%, var(--gold2) 65%, var(--gold3) 78%, var(--pale) 90%, #FFF8E0 100%);
     -webkit-background-clip:text;
     background-clip:text;
-    filter:drop-shadow(0 0 65px rgba(200,154,24,.5));
+    filter:drop-shadow(0 0 70px rgba(200,154,24,.45));
     opacity:0;
-    animation:name-in 1.9s cubic-bezier(.1,1,.2,1) .6s forwards, gold-flow 9s linear 3s infinite;
-}
-
-.hero-divider {
-    display:flex;
-    align-items:center;
-    gap:1.5rem;
-    margin:2.6rem auto;
-    width:fit-content;
-    opacity:0;
-    animation:rise .9s ease 1.9s forwards;
-}
-
-.hd-line { height:1px; background:linear-gradient(90deg, transparent, var(--gold2), transparent); }
-.hd-line.long { width:190px; }
-.hd-line.short { width:58px; }
-.hd-gem { 
-    width:10px; 
-    height:10px; 
-    background:var(--gold3); 
-    clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%); 
+    animation:name-in 1.8s cubic-bezier(.1,1,.2,1) .6s forwards, gold-flow 8s linear 3s infinite;
 }
 
 .hero-sub-index {
     font-family:'Cinzel',serif;
-    font-size:clamp(.68rem, 1.5vw, .88rem);
-    letter-spacing:.48em;
+    font-size:clamp(.68rem, 1.4vw, .86rem);
+    letter-spacing:.45em;
     color:var(--muted);
     text-transform:uppercase;
-    line-height:2.3;
+    margin-top:1.5rem;
     opacity:0;
-    animation:rise .9s ease 2.5s forwards;
+    animation:rise .9s ease 2.4s forwards;
 }
 
 .enter-btn {
-    margin-top:4.5rem;
-    padding:1.15rem 3.5rem;
+    margin-top:4rem;
+    padding:1.1rem 3.4rem;
     font-family:'Cinzel',serif;
-    font-size:.87rem;
-    letter-spacing:.38em;
+    font-size:.85rem;
+    letter-spacing:.35em;
     text-transform:uppercase;
     background:linear-gradient(135deg, var(--blood), var(--blood2));
-    border:1px solid rgba(204,16,32,.65);
+    border:1px solid rgba(204,16,32,.6);
     color:var(--pale);
     cursor:pointer;
     transition:all .3s;
     opacity:0;
-    animation:rise .9s ease 3.2s forwards;
+    animation:rise .9s ease 3s forwards;
 }
 
 .enter-btn:hover {
     background:linear-gradient(135deg, var(--blood2), var(--crimson));
     border-color:var(--crimson);
-    transform:scale(1.04);
-    box-shadow:0 0 35px rgba(204,16,32,.45);
+    transform:scale(1.05);
 }
 
-/* Cards */
-.nav-grid {
-    max-width:1200px;
-    margin:0 auto;
-    padding:6rem 2rem 9rem;
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(340px, 1fr));
-    gap:2.2rem;
-}
-
-.nav-card {
-    background:linear-gradient(160deg, var(--deep2), var(--deep));
-    border:1px solid rgba(120,0,0,.38);
-    border-top:3px solid var(--blood2);
-    padding:2.4rem 2rem;
+/* Seção do Arquivo (vídeo) */
+.arquivo-section {
+    padding:6rem 2rem 8rem;
+    background:linear-gradient(180deg, var(--void), var(--abyss) 30%, var(--deep2) 70%, var(--void));
     position:relative;
+}
+
+.arquivo-section::before,
+.arquivo-section::after {
+    content:''; position:absolute; left:0; right:0; height:1px;
+    background:linear-gradient(90deg, transparent, var(--blood), var(--crimson), var(--blood), transparent);
+}
+.arquivo-section::before { top:0; }
+.arquivo-section::after { bottom:0; }
+
+.vid-wrap {
+    max-width:920px;
+    margin:0 auto;
+    position:relative;
+    z-index:1;
+}
+
+.vid-frame-outer {
+    position:relative;
+    padding:3px;
+    background:linear-gradient(135deg, var(--blood) 0%, var(--gold2) 30%, var(--crimson) 50%, var(--gold2) 70%, var(--blood) 100%);
+    background-size:300%;
+    animation:border-flow 10s linear infinite;
+}
+
+.vid-frame-mid {
+    background:var(--abyss);
+    padding:10px;
+    position:relative;
+}
+
+.vid-inner {
+    position:relative;
+    background:#000;
     overflow:hidden;
-    transition:all .4s;
-    cursor:pointer;
 }
 
-.nav-card:hover {
-    transform:translateY(-15px);
-    border-color:var(--crimson);
-    box-shadow:0 25px 45px rgba(120,0,0,.35);
-}
-
-.nav-card::before {
-    content:''; 
-    position:absolute; 
-    top:0; left:0; right:0; 
-    height:2px;
-    background:linear-gradient(90deg, transparent, var(--blood2), var(--crimson), var(--blood2), transparent);
-}
-
-.nav-icon {
-    font-size:3.6rem;
-    margin-bottom:1.4rem;
+.vid-inner video {
     display:block;
-    opacity:0.95;
+    width:100%;
+    max-height:560px;
+    object-fit:contain;
 }
 
-.nav-title {
-    font-family:'Cinzel',serif;
-    font-size:1.4rem;
-    font-weight:700;
-    letter-spacing:.12em;
-    color:var(--gold3);
-    margin-bottom:.7rem;
+.va {
+    position:absolute;
+    width:34px; height:34px;
+    z-index:5;
+    border-color:var(--gold2);
+    border-style:solid;
+}
+.va.tl { top:-2px; left:-2px; border-width:3px 0 0 3px; }
+.va.tr { top:-2px; right:-2px; border-width:3px 3px 0 0; }
+.va.bl { bottom:-2px; left:-2px; border-width:0 0 3px 3px; }
+.va.br { bottom:-2px; right:-2px; border-width:0 3px 3px 0; }
+
+.classified {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:1.2rem;
+    margin:2.5rem 0;
+    flex-wrap:wrap;
 }
 
-.nav-desc {
-    font-family:'Cormorant Garamond',serif;
-    font-size:.93rem;
-    font-style:italic;
-    color:var(--muted);
-    line-height:1.75;
+.classified-badge {
+    font-family:'Orbitron',sans-serif;
+    font-size:.46rem;
+    letter-spacing:.55em;
+    padding:.55rem 1.6rem;
+    border:1px solid rgba(200,16,32,.55);
+    color:var(--crimson);
+    text-transform:uppercase;
+    background:rgba(200,16,32,.06);
 }
 </style>
 </head>
@@ -210,6 +197,7 @@ body {
 <canvas id="bg-canvas"></canvas>
 <div id="nav-mount"></div>
 
+<!-- HERO -->
 <div class="hero-index">
     <div class="index-glow"></div>
     
@@ -227,52 +215,48 @@ body {
     </div>
 
     <div class="hero-content-index">
-      <div class="hero-eyebrow">IMPÉRIO VILTRUMITA • ANO 3000</div>
+      <div class="hero-eyebrow">ARQUIVO IMPERIAL • CLASSIFICAÇÃO SUPREMA</div>
       <h1 class="hero-name-index">THRAGG</h1>
-      <div class="hero-divider">
-        <div class="hd-line long"></div>
-        <div class="hd-gem"></div>
-        <div class="hd-line short"></div>
-        <div class="hd-gem"></div>
-        <div class="hd-line long"></div>
-      </div>
-      <p class="hero-sub-index">Grão-Regente • Conquistador Supremo • Eterno</p>
+      <p class="hero-sub-index">Transmissão Visual do Grão-Regente • Ultra-Secreto</p>
       
-      <button class="enter-btn" onclick="document.getElementById('nav-grid').scrollIntoView({behavior:'smooth'})">
-        ◆ ENTRAR NO IMPÉRIO ◆
+      <button class="enter-btn" onclick="document.getElementById('arquivo-section').scrollIntoView({behavior:'smooth'})">
+        ◆ ACESSAR O ARQUIVO ◆
       </button>
     </div>
 </div>
 
-<div id="nav-grid" class="nav-grid">
-  <div class="nav-card" onclick="window.location.href='thragg_legado.html'">
-    <span class="nav-icon">Ⅰ</span>
-    <div class="nav-title">LEGADO</div>
-    <div class="nav-desc">A história do mais poderoso ser do universo</div>
-  </div>
+<!-- SEÇÃO DO VÍDEO (do thragg_arquivo.html) -->
+<div id="arquivo-section" class="arquivo-section">
+    <div class="vid-wrap">
+        <div class="classified">
+            <div class="classified-badge">⬛ CLASSIFICAÇÃO: SUPREMA IMPERIAL</div>
+            <div class="classified-badge">◆ ACESSO RESTRITO • OLHOS VILTRUMITAS SOMENTE</div>
+        </div>
 
-  <div class="nav-card" onclick="window.location.href='thragg_hino.html'">
-    <span class="nav-icon">♪</span>
-    <div class="nav-title">HINO</div>
-    <div class="nav-desc">O som oficial do Império Viltrumita</div>
-  </div>
+        <div class="vid-frame-outer">
+            <div class="vid-frame-mid">
+                <div class="vid-inner">
+                    <div class="va tl"></div>
+                    <div class="va tr"></div>
+                    <div class="va bl"></div>
+                    <div class="va br"></div>
+                    <video controls preload="metadata" id="main-video">
+                        <source src="Download__3_.mp4" type="video/mp4">
+                        Seu navegador não suporta vídeo.
+                    </video>
+                </div>
+            </div>
+        </div>
 
-  <div class="nav-card" onclick="window.location.href='thragg_arquivo.html'">
-    <span class="nav-icon">⬛</span>
-    <div class="nav-title">ARQUIVO</div>
-    <div class="nav-desc">Transmissão visual ultra-secreta</div>
-  </div>
-
-  <div class="nav-card" onclick="window.location.href='thragg_admin.html'">
-    <span class="nav-icon">⚙︎</span>
-    <div class="nav-title">PAINEL IMPERIAL</div>
-    <div class="nav-desc">Acesso restrito ao Grão-Regente</div>
-  </div>
+        <div style="margin-top:2rem; text-align:center; font-family:'Orbitron',sans-serif; font-size:.4rem; letter-spacing:.6em; color:var(--dim);">
+            ORIGEM: PLANETA VILTRUM • ARQUIVO CENTRAL • ANO 3000 • CICLO VII
+        </div>
+    </div>
 </div>
 
 <footer class="site-footer">
-  <span class="ft-logo">THRAGG</span>
-  <div class="ft-sub">Império Viltrumita • Sangue Puro • Domínio Eterno</div>
+    <span class="ft-logo">THRAGG</span>
+    <div class="ft-sub">Arquivo Visual • Viltrum • Classificado</div>
 </footer>
 
 <script src="thragg_data.js"></script>
@@ -281,6 +265,17 @@ document.getElementById('shared-inject').textContent = SHARED_CSS;
 document.getElementById('nav-mount').innerHTML = renderNav('index');
 initBgCanvas();
 DB.bumpVisit('Index');
+
+// Contagem de play do vídeo (igual à página original)
+const vid = document.getElementById('main-video');
+let vidCounted = false;
+vid.addEventListener('play', () => { 
+    if(!vidCounted){ 
+        DB.bumpPlay('video'); 
+        DB.log('Vídeo do Grão-Regente reproduzido','play'); 
+        vidCounted = true; 
+    } 
+});
 </script>
 </body>
 </html>

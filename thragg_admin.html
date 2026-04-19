@@ -294,26 +294,35 @@ let currentUser = null;
 
 function doLogin(){
   const u = document.getElementById('lf-user').value.trim();
-  const p = document.getElementById('lf-pass').value;
+  const p = document.getElementById('lf-pass').value.trim();
+
   const result = DB.checkLogin(u, p);
+
   if(result.ok){
     currentUser = result;
     document.getElementById('login-pg').style.display = 'none';
     document.getElementById('dash-pg').classList.add('active');
     document.getElementById('dash-username').textContent = result.user;
     document.getElementById('dash-role-badge').textContent = '● ' + (result.role || 'Convidado');
-    // hide credentials tab for guests
+
+    // Esconde aba de credenciais para usuários comuns
     const credTab = document.getElementById('tab-cred-btn');
-    if(!result.master){ credTab.style.display = 'none'; }
-    else { credTab.style.display = ''; }
-    DB.log('Login bem-sucedido: ' + result.user,'admin');
+    if(!result.master){ 
+      credTab.style.display = 'none'; 
+    } else { 
+      credTab.style.display = ''; 
+    }
+
+    DB.log('Login bem-sucedido: ' + result.user, 'admin');
     renderAll();
   } else {
-    document.getElementById('lf-error').classList.add('show');
+    const errorEl = document.getElementById('lf-error');
+    errorEl.textContent = "⬛ Acesso negado — credenciais inválidas";
+    errorEl.classList.add('show');
     document.getElementById('lf-pass').value = '';
+    document.getElementById('lf-user').focus();
   }
 }
-
 function doLogout(){
   currentUser = null;
   document.getElementById('login-pg').style.display = 'flex';

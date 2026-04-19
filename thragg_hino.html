@@ -2,11 +2,17 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arquivo — THRAGG</title>
+<title>Hino — THRAGG</title>
 <style id="shared-inject"></style>
 <style>
-.arquivo-hero{position:relative;height:100vh;min-height:680px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden}
-.arquivo-glow{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 55%,rgba(130,0,20,.25) 0%,transparent 65%),radial-gradient(ellipse 100% 40% at 50% 100%,rgba(100,0,0,.3) 0%,transparent 60%),linear-gradient(180deg,var(--void) 0%,var(--abyss) 30%,#0A0110 65%,var(--void) 100%)}
+/* ── HERO HINO ── */
+.hino-hero{position:relative;height:100vh;min-height:680px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+.hino-glow{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 55%,rgba(180,0,20,.22) 0%,transparent 65%),radial-gradient(ellipse 40% 80% at 8% 50%,rgba(80,0,100,.18) 0%,transparent 60%),radial-gradient(ellipse 40% 80% at 92% 50%,rgba(80,0,100,.18) 0%,transparent 60%),linear-gradient(180deg,var(--void) 0%,var(--abyss) 30%,#0A0215 65%,var(--void) 100%)}
+.seal-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.seal-wrap svg{width:min(620px,92vw);height:min(620px,92vw);opacity:.055}
+.seal-outer{animation:spin-ccw 100s linear infinite;transform-origin:250px 250px}
+.seal-mid{animation:spin-cw 60s linear infinite;transform-origin:250px 250px}
+.seal-inner{animation:spin-ccw 40s linear infinite;transform-origin:250px 250px}
 .blade{position:absolute;left:0;right:0;height:1px}
 .blade::before{content:'';display:block;height:1px;background:linear-gradient(90deg,transparent 5%,rgba(180,0,20,.5) 25%,rgba(240,60,30,1) 50%,rgba(180,0,20,.5) 75%,transparent 95%)}
 .blade.t{top:13%}.blade.b{bottom:13%}
@@ -19,7 +25,7 @@
 .hero-eyebrow{font-family:'Orbitron',sans-serif;font-size:.52rem;letter-spacing:.9em;color:var(--crimson);text-transform:uppercase;margin-bottom:2.8rem;display:flex;align-items:center;gap:1.6rem;opacity:0;animation:rise .9s ease .3s forwards}
 .hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--crimson))}
 .hero-eyebrow::after{transform:scaleX(-1)}
-.hero-name{font-family:'Cinzel Decorative',serif;font-size:clamp(3.5rem,10vw,8rem);font-weight:900;line-height:.88;letter-spacing:.06em;color:transparent;background:linear-gradient(155deg,#FFF8E0 0%,var(--pale) 15%,var(--gold3) 30%,var(--gold2) 42%,#FFF5D0 50%,var(--gold2) 58%,var(--gold3) 70%,var(--pale) 85%,#FFF8E0 100%);background-size:250% auto;-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 50px rgba(200,154,24,.4));opacity:0;animation:name-in 1.6s cubic-bezier(.1,1,.2,1) .5s forwards,gold-flow 7s linear 2.5s infinite}
+.hero-name{font-family:'Cinzel Decorative',serif;font-size:clamp(4rem,12vw,9rem);font-weight:900;line-height:.88;letter-spacing:.06em;color:transparent;background:linear-gradient(155deg,#FFF8E0 0%,var(--pale) 15%,var(--gold3) 30%,var(--gold2) 42%,#FFF5D0 50%,var(--gold2) 58%,var(--gold3) 70%,var(--pale) 85%,#FFF8E0 100%);background-size:250% auto;-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 50px rgba(200,154,24,.4));opacity:0;animation:name-in 1.6s cubic-bezier(.1,1,.2,1) .5s forwards,gold-flow 7s linear 2.5s infinite}
 .hero-divider{display:flex;align-items:center;gap:1.2rem;margin:2rem auto;width:fit-content;opacity:0;animation:rise .8s ease 1.6s forwards}
 .hd-line{height:1px;background:linear-gradient(90deg,transparent,var(--gold2),transparent)}
 .hd-line.long{width:160px}.hd-line.short{width:50px}
@@ -29,29 +35,49 @@
 .scroll-down span{font-family:'Orbitron',sans-serif;font-size:.4rem;letter-spacing:.7em;color:var(--dim);text-transform:uppercase}
 .sd-line{width:1px;height:0;background:linear-gradient(180deg,var(--crimson),transparent);animation:drip 2.5s ease-in-out 3.5s infinite}
 
-/* VIDEO SECTION */
-.video-section{position:relative;padding:6rem 2rem 7rem;overflow:hidden;background:linear-gradient(180deg,var(--void),var(--abyss) 30%,var(--abyss) 70%,var(--void))}
-.video-section::before,.video-section::after{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--blood),var(--crimson),var(--blood),transparent)}
-.video-section::before{top:0}.video-section::after{bottom:0}
-.vid-wrap{max-width:920px;margin:0 auto;position:relative;z-index:1}
-.vid-frame-outer{position:relative;padding:2px;background:linear-gradient(135deg,var(--blood) 0%,var(--gold) 25%,var(--crimson) 50%,var(--gold2) 75%,var(--blood) 100%);background-size:300%;animation:border-flow 10s linear infinite}
-.vid-frame-mid{background:var(--abyss);padding:8px;position:relative}
-.vid-frame-mid::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(120,0,0,.15) 0%,transparent 15%),linear-gradient(to left,rgba(120,0,0,.15) 0%,transparent 15%);pointer-events:none;z-index:2}
-.vid-inner{position:relative;background:#000;line-height:0;overflow:hidden}
-.vid-inner video{display:block;width:100%;max-height:540px;object-fit:contain;background:#000}
-.va{position:absolute;width:32px;height:32px;z-index:5;border-color:var(--gold2);border-style:solid}
-.va.tl{top:-1px;left:-1px;border-width:2px 0 0 2px}.va.tr{top:-1px;right:-1px;border-width:2px 2px 0 0}
-.va.bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px}.va.br{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
-.vid-status{background:var(--deep2);border:1px solid rgba(120,0,0,.3);border-top:none;padding:1.2rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem}
-.vs-item{display:flex;flex-direction:column;gap:.3rem}
-.vs-k{font-family:'Orbitron',sans-serif;font-size:.38rem;letter-spacing:.55em;color:var(--dim);text-transform:uppercase}
-.vs-v{font-family:'Cinzel',serif;font-size:.78rem;color:var(--gold3);letter-spacing:.05em}
-
-/* classified ribbon */
-.classified{display:flex;align-items:center;justify-content:center;gap:1.2rem;margin-bottom:2.5rem;flex-wrap:wrap}
-.classified-badge{font-family:'Orbitron',sans-serif;font-size:.45rem;letter-spacing:.5em;padding:.5rem 1.4rem;border:1px solid rgba(200,16,32,.5);color:var(--crimson);text-transform:uppercase;background:rgba(200,16,32,.05);position:relative;overflow:hidden}
-.classified-badge::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(200,16,32,.08),transparent);background-size:200%;animation:sweep 3s linear infinite}
-@media(max-width:600px){.vid-status{flex-direction:column}}
+/* ── PLAYER SECTION ── */
+.audio-section{position:relative;padding:6rem 2rem 7rem;overflow:hidden;background:linear-gradient(180deg,var(--void),var(--abyss) 20%,var(--deep2) 50%,var(--abyss) 80%,var(--void))}
+.audio-section::before,.audio-section::after{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--blood),var(--crimson),var(--blood),transparent)}
+.audio-section::before{top:0}.audio-section::after{bottom:0}
+.audio-deco-v{position:absolute;font-family:'Cinzel Decorative',serif;font-size:26rem;font-weight:900;color:rgba(120,0,0,.04);line-height:1;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;user-select:none}
+.player-shell{max-width:780px;margin:0 auto;position:relative;z-index:2}
+.player-outer{position:relative;padding:2px;background:linear-gradient(135deg,var(--blood) 0%,var(--gold2) 30%,var(--crimson) 50%,var(--gold2) 70%,var(--blood) 100%);background-size:300%;animation:border-flow 8s linear infinite}
+.player-inner{background:linear-gradient(160deg,var(--deep2),var(--deep) 60%,var(--abyss));padding:2.5rem 2.5rem 2rem;position:relative;overflow:hidden}
+.player-inner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(150,0,20,.12),transparent 70%);pointer-events:none}
+.pc{position:absolute;width:20px;height:20px;border-color:var(--gold2);border-style:solid}
+.pc.tl{top:10px;left:10px;border-width:1.5px 0 0 1.5px}.pc.tr{top:10px;right:10px;border-width:1.5px 1.5px 0 0}
+.pc.bl{bottom:10px;left:10px;border-width:0 0 1.5px 1.5px}.pc.br{bottom:10px;right:10px;border-width:0 1.5px 1.5px 0}
+.track-info{display:flex;align-items:center;gap:1.8rem;margin-bottom:2rem}
+.track-icon{width:70px;height:70px;flex-shrink:0;background:linear-gradient(135deg,var(--deep2),var(--mid));border:1px solid rgba(200,154,24,.3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.track-icon::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(200,154,24,.1),transparent 70%)}
+.track-icon svg{width:32px;height:32px;position:relative;z-index:1}
+.track-meta{flex:1}
+.track-title-el{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:var(--pale);letter-spacing:.08em;margin-bottom:.3rem}
+.track-artist-el{font-family:'Orbitron',sans-serif;font-size:.48rem;letter-spacing:.5em;color:var(--muted);text-transform:uppercase}
+.waveform{height:60px;margin:1.5rem 0;display:flex;align-items:center;gap:2px;overflow:hidden;cursor:pointer;position:relative}
+.wf-bar{flex:1;background:rgba(155,0,0,.4);min-height:4px;border-radius:1px;transform-origin:bottom}
+.waveform.playing .wf-bar{animation:wave-dance var(--dur,1s) ease-in-out infinite alternate}
+.wf-bar:nth-child(even){animation-delay:.15s!important}.wf-bar:nth-child(3n){animation-delay:.3s!important}
+.wf-bar:nth-child(4n){animation-delay:.05s!important}.wf-bar:nth-child(5n){animation-delay:.25s!important}
+@keyframes wave-dance{from{transform:scaleY(.3);background:rgba(155,0,0,.4)}to{transform:scaleY(1);background:var(--crimson)}}
+.wf-played{position:absolute;left:0;top:0;bottom:0;background:rgba(204,16,32,.12);pointer-events:none;transition:width .1s linear}
+.progress-row{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
+.time-label{font-family:'Orbitron',sans-serif;font-size:.5rem;color:var(--dim);letter-spacing:.1em;min-width:36px}
+.progress-track{flex:1;height:3px;background:rgba(120,0,0,.4);position:relative;cursor:pointer}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--blood2),var(--crimson));transition:width .1s linear;position:relative}
+.progress-fill::after{content:'';position:absolute;right:-5px;top:50%;transform:translateY(-50%);width:10px;height:10px;background:var(--gold3);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);opacity:0;transition:opacity .2s}
+.progress-track:hover .progress-fill::after{opacity:1}
+.controls{display:flex;align-items:center;justify-content:center;gap:1.5rem}
+.ctrl-btn{background:none;border:none;cursor:pointer;color:var(--muted);transition:color .2s,transform .15s;padding:.4rem;display:flex;align-items:center}
+.ctrl-btn:hover{color:var(--text);transform:scale(1.12)}
+.ctrl-btn.play-btn{width:52px;height:52px;background:linear-gradient(135deg,var(--blood),var(--blood2));border:1px solid rgba(204,16,32,.5);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.ctrl-btn.play-btn:hover{background:linear-gradient(135deg,var(--blood2),var(--crimson));color:white}
+.ctrl-btn.play-btn:active{transform:scale(.95)}
+.volume-row{display:flex;align-items:center;gap:.8rem;margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid rgba(120,0,0,.25)}
+.vol-icon{color:var(--dim)}
+.vol-slider{flex:1;-webkit-appearance:none;appearance:none;height:2px;background:rgba(120,0,0,.4);outline:none;cursor:pointer}
+.vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;background:var(--gold2);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);cursor:pointer}
+@media(max-width:600px){.track-info{flex-direction:column;text-align:center}}
 </style>
 </head>
 <body>
@@ -59,8 +85,16 @@
 <div id="nav-mount"></div>
 
 <div class="page-wrap">
-  <section class="arquivo-hero">
-    <div class="arquivo-glow"></div>
+  <!-- HERO -->
+  <section class="hino-hero">
+    <div class="hino-glow"></div>
+    <div class="seal-wrap">
+      <svg viewBox="0 0 500 500" fill="none">
+        <g class="seal-outer"><circle cx="250" cy="250" r="242" stroke="#6B0000" stroke-width="1" stroke-dasharray="4 5"/><circle cx="250" cy="250" r="234" stroke="#4A0000" stroke-width=".5"/><g stroke="#8B0000" stroke-width="1.5"><line x1="250" y1="8" x2="250" y2="22"/><line x1="250" y1="478" x2="250" y2="492"/><line x1="8" y1="250" x2="22" y2="250"/><line x1="478" y1="250" x2="492" y2="250"/><line x1="86" y1="86" x2="96" y2="96"/><line x1="414" y1="86" x2="404" y2="96"/><line x1="86" y1="414" x2="96" y2="404"/><line x1="414" y1="414" x2="404" y2="404"/></g></g>
+        <g class="seal-mid"><circle cx="250" cy="250" r="195" stroke="#7A0000" stroke-width="1.2"/><polygon points="250,55 268,220 250,445 232,220" fill="rgba(180,0,20,.22)" stroke="#AA0010" stroke-width="1.2"/><polygon points="55,250 220,232 445,250 220,268" fill="rgba(180,0,20,.16)" stroke="#8A0000" stroke-width=".8"/></g>
+        <g class="seal-inner"><circle cx="250" cy="250" r="130" stroke="#AA0010" stroke-width="1.5"/><circle cx="250" cy="250" r="40" stroke="#CC1020" stroke-width="1.5" fill="rgba(180,0,20,.2)"/><polygon points="250,120 340,250 250,380 160,250" fill="rgba(168,120,8,.15)" stroke="#A87808" stroke-width="1.2"/><line x1="250" y1="120" x2="250" y2="380" stroke="#6B0000" stroke-width=".8" opacity=".6"/><line x1="120" y1="250" x2="380" y2="250" stroke="#6B0000" stroke-width=".8" opacity=".6"/></g>
+      </svg>
+    </div>
     <div class="blade t"></div><div class="blade b"></div>
     <div class="pip"></div><div class="pip b"></div>
     <div class="plate tl"><svg width="90" height="90" viewBox="0 0 90 90"><polyline points="0,65 0,0 65,0" fill="none" stroke="#A87808" stroke-width="1.5" opacity=".6"/><polyline points="0,35 0,0 35,0" fill="none" stroke="#C89A18" stroke-width="2.5" opacity=".7"/></svg></div>
@@ -68,56 +102,97 @@
     <div class="plate bl"><svg width="90" height="90" viewBox="0 0 90 90"><polyline points="0,65 0,0 65,0" fill="none" stroke="#A87808" stroke-width="1.5" opacity=".6"/><polyline points="0,35 0,0 35,0" fill="none" stroke="#C89A18" stroke-width="2.5" opacity=".7"/></svg></div>
     <div class="plate br"><svg width="90" height="90" viewBox="0 0 90 90"><polyline points="0,65 0,0 65,0" fill="none" stroke="#A87808" stroke-width="1.5" opacity=".6"/><polyline points="0,35 0,0 35,0" fill="none" stroke="#C89A18" stroke-width="2.5" opacity=".7"/></svg></div>
     <div class="hero-content">
-      <div class="hero-eyebrow">Arquivo Visual · Classificação Suprema</div>
-      <h1 class="hero-name">ARQUIVO</h1>
+      <div class="hero-eyebrow">Transmissão Sonora · Império Viltrumita</div>
+      <h1 class="hero-name">HINO</h1>
       <div class="hero-divider"><div class="hd-line long"></div><div class="hd-gem"></div><div class="hd-line short"></div><div class="hd-gem"></div><div class="hd-line long"></div></div>
-      <p class="hero-sub">Transmissão do Grão-Regente · Ultra-Secreto</p>
+      <p class="hero-sub">O Som do Império · Eterno como Viltrum</p>
     </div>
-    <div class="scroll-down"><span>Assistir</span><div class="sd-line"></div></div>
+    <div class="scroll-down"><span>Ouvir</span><div class="sd-line"></div></div>
   </section>
 
-  <div class="video-section">
-    <div class="s-tag">Arquivo Visual Imperial</div>
-    <h2 class="s-title">Transmissão do Grão-Regente</h2>
-    <div class="classified">
-      <div class="classified-badge">⬛ Classificação: Suprema Imperial</div>
-      <div class="classified-badge">◆ Acesso Restrito · Olhos Viltrumitas Somente</div>
-    </div>
-    <div class="vid-wrap">
-      <div class="vid-frame-outer">
-        <div class="vid-frame-mid">
-          <div class="vid-inner">
-            <div class="va tl"></div><div class="va tr"></div><div class="va bl"></div><div class="va br"></div>
-            <video controls preload="metadata" id="main-video">
-              <source src="Download__3_.mp4" type="video/mp4">
-            </video>
+  <!-- PLAYER -->
+  <div class="audio-section" id="player-sec">
+    <div class="audio-deco-v">V</div>
+    <div class="s-tag">Arquivo Sonoro Imperial</div>
+    <h2 class="s-title">Hino do Grão-Regente</h2>
+    <div class="player-shell">
+      <div class="player-outer">
+        <div class="player-inner">
+          <div class="pc tl"></div><div class="pc tr"></div><div class="pc bl"></div><div class="pc br"></div>
+          <div class="track-info">
+            <div class="track-icon">
+              <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#A87808" stroke-width="1"/><circle cx="16" cy="16" r="8" stroke="#CC1020" stroke-width="1"/><circle cx="16" cy="16" r="3" fill="#C89A18"/><line x1="16" y1="2" x2="16" y2="8" stroke="#6B0000" stroke-width="1"/><line x1="16" y1="24" x2="16" y2="30" stroke="#6B0000" stroke-width="1"/><line x1="2" y1="16" x2="8" y2="16" stroke="#6B0000" stroke-width="1"/><line x1="24" y1="16" x2="30" y2="16" stroke="#6B0000" stroke-width="1"/></svg>
+            </div>
+            <div class="track-meta">
+              <div class="track-title-el">Die Young — Super Slowed</div>
+              <div class="track-artist-el">Arquivo Sonoro · Viltrum</div>
+            </div>
+          </div>
+          <div class="waveform" id="waveform"><div class="wf-played" id="wf-played"></div></div>
+          <div class="progress-row">
+            <span class="time-label" id="time-cur">0:00</span>
+            <div class="progress-track" id="prog-track"><div class="progress-fill" id="prog-fill"></div></div>
+            <span class="time-label" id="time-dur" style="text-align:right">0:00</span>
+          </div>
+          <div class="controls">
+            <button class="ctrl-btn" id="btn-back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.87"/><text x="9.5" y="15" fill="currentColor" stroke="none" font-size="6" font-family="sans-serif">10</text></svg></button>
+            <button class="ctrl-btn play-btn" id="btn-play">
+              <svg id="icon-play" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+              <svg id="icon-pause" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+            <button class="ctrl-btn" id="btn-fwd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-3.87"/><text x="9.5" y="15" fill="currentColor" stroke="none" font-size="6" font-family="sans-serif">10</text></svg></button>
+          </div>
+          <div class="volume-row">
+            <svg class="vol-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            <input type="range" class="vol-slider" id="vol-slider" min="0" max="1" step=".01" value="1">
           </div>
         </div>
-      </div>
-      <div class="vid-status">
-        <div class="vs-item"><span class="vs-k">Origem</span><span class="vs-v">Planeta Viltrum · Arquivo Central</span></div>
-        <div class="vs-item"><span class="vs-k">Sujeito</span><span class="vs-v">Thragg — O Grão-Regente</span></div>
-        <div class="vs-item"><span class="vs-k">Classificação</span><span class="vs-v" style="color:var(--crimson)">⬛ Ultra-Secreto</span></div>
-        <div class="vs-item"><span class="vs-k">Era Imperial</span><span class="vs-v">Ano 3.000 · Ciclo VII</span></div>
       </div>
     </div>
   </div>
 
   <footer class="site-footer">
     <span class="ft-logo">THRAGG</span>
-    <div class="ft-sub">Arquivo Visual · Viltrum · Classificado</div>
+    <div class="ft-sub">Hino do Império · Viltrum · Eterno</div>
   </footer>
 </div>
+
+<audio id="audio" preload="auto"><source src="Die_Young_-_Super_Slowed_spotdown_org.mp3" type="audio/mpeg"></audio>
 
 <script src="thragg_data.js"></script>
 <script>
 document.getElementById('shared-inject').textContent = SHARED_CSS;
-document.getElementById('nav-mount').innerHTML = renderNav('arquivo');
+document.getElementById('nav-mount').innerHTML = renderNav('hino');
 initBgCanvas();
-DB.bumpVisit('Arquivo');
-const vid = document.getElementById('main-video');
-let vidCounted = false;
-vid.addEventListener('play', () => { if(!vidCounted){ DB.bumpPlay('video'); DB.log('Vídeo do Grão-Regente reproduzido','play'); vidCounted=true; } });
+DB.bumpVisit('Hino');
+
+/* waveform */
+const wf=document.getElementById('waveform');
+[20,35,55,40,70,50,80,45,60,30,75,55,40,65,35,85,50,45,70,30,60,80,40,55,35,75,50,90,45,65,30,70,55,40,80,50,60,35,75,45,55,70,30,85,50,40,65,55,35,80,45,60,75,30,50,70,40,85,55,65,35,80,50,45,70,30].forEach(h=>{const b=document.createElement('div');b.className='wf-bar';b.style.height=h+'%';b.style.setProperty('--dur',(0.4+Math.random()*.5)+'s');wf.appendChild(b)});
+
+/* player */
+const audio=document.getElementById('audio');
+const bPlay=document.getElementById('btn-play'),iPlay=document.getElementById('icon-play'),iPause=document.getElementById('icon-pause');
+const pFill=document.getElementById('prog-fill'),pTrack=document.getElementById('prog-track');
+const wfP=document.getElementById('wf-played'),tCur=document.getElementById('time-cur'),tDur=document.getElementById('time-dur');
+const vol=document.getElementById('vol-slider');
+let playing=false;
+const fmt=s=>{const m=Math.floor(s/60),sc=Math.floor(s%60);return m+':'+(sc<10?'0':'')+sc};
+audio.addEventListener('loadedmetadata',()=>tDur.textContent=fmt(audio.duration));
+audio.addEventListener('timeupdate',()=>{if(!audio.duration)return;const p=(audio.currentTime/audio.duration)*100;pFill.style.width=p+'%';wfP.style.width=p+'%';tCur.textContent=fmt(audio.currentTime)});
+audio.addEventListener('ended',()=>{playing=false;iPlay.style.display='';iPause.style.display='none';wf.classList.remove('playing')});
+bPlay.addEventListener('click',()=>{
+  if(playing){audio.pause();playing=false;iPlay.style.display='';iPause.style.display='none';wf.classList.remove('playing')}
+  else{audio.play();playing=true;iPlay.style.display='none';iPause.style.display='';wf.classList.add('playing');DB.bumpPlay('audio');DB.log('Hino do Império reproduzido','play')}
+});
+document.getElementById('btn-back').addEventListener('click',()=>audio.currentTime=Math.max(0,audio.currentTime-10));
+document.getElementById('btn-fwd').addEventListener('click',()=>audio.currentTime=Math.min(audio.duration||0,audio.currentTime+10));
+vol.addEventListener('input',()=>audio.volume=vol.value);
+function seek(e){const r=pTrack.getBoundingClientRect(),x=Math.max(0,Math.min(e.clientX-r.left,r.width));audio.currentTime=(x/r.width)*(audio.duration||0)}
+let drag=false;
+pTrack.addEventListener('mousedown',e=>{drag=true;seek(e)});
+window.addEventListener('mousemove',e=>{if(drag)seek(e)});
+window.addEventListener('mouseup',()=>drag=false);
 </script>
 </body>
 </html>

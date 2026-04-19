@@ -6,8 +6,7 @@
 <title>THRAGG • Império Viltrumita</title>
 <style id="shared-inject"></style>
 <style>
-/* ── ESTILO GERAL DA INDEX (igual ao resto) ── */
-body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-x:hidden; }
+body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-x:hidden; font-family:system-ui; }
 
 .hero-index {
     position:relative;
@@ -41,10 +40,7 @@ body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-
     height: min(780px, 95vw);
 }
 
-.hero-content-index {
-    position:relative;
-    z-index:10;
-}
+.hero-content-index { position:relative; z-index:10; }
 
 .hero-eyebrow {
     font-family:'Orbitron',sans-serif;
@@ -63,13 +59,9 @@ body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-
 
 .hero-eyebrow::before,
 .hero-eyebrow::after {
-    content:'';
-    display:block;
-    width:65px;
-    height:1px;
+    content:''; display:block; width:65px; height:1px;
     background:linear-gradient(90deg, transparent, var(--crimson));
 }
-
 .hero-eyebrow::after { transform:scaleX(-1); }
 
 .hero-name-index {
@@ -88,13 +80,8 @@ body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-
 }
 
 .hero-divider {
-    display:flex;
-    align-items:center;
-    gap:1.4rem;
-    margin:2.4rem auto;
-    width:fit-content;
-    opacity:0;
-    animation:rise .9s ease 1.8s forwards;
+    display:flex; align-items:center; gap:1.4rem; margin:2.4rem auto; width:fit-content;
+    opacity:0; animation:rise .9s ease 1.8s forwards;
 }
 
 .hd-line { height:1px; background:linear-gradient(90deg, transparent, var(--gold2), transparent); }
@@ -133,10 +120,8 @@ body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-
     background:linear-gradient(135deg, var(--blood2), var(--crimson));
     border-color:var(--crimson);
     transform:scale(1.03);
-    box-shadow:0 0 30px rgba(204,16,32,.4);
 }
 
-/* Cards de navegação */
 .nav-grid {
     max-width:1180px;
     margin:0 auto;
@@ -164,36 +149,13 @@ body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-
 }
 
 .nav-card::before {
-    content:'';
-    position:absolute;
-    top:0; left:0; right:0;
-    height:2px;
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
     background:linear-gradient(90deg, transparent, var(--blood2), var(--crimson), var(--blood2), transparent);
 }
 
-.nav-icon {
-    font-size:3.2rem;
-    margin-bottom:1.2rem;
-    display:block;
-    opacity:.9;
-}
-
-.nav-title {
-    font-family:'Cinzel',serif;
-    font-size:1.35rem;
-    font-weight:700;
-    letter-spacing:.1em;
-    color:var(--gold3);
-    margin-bottom:.6rem;
-}
-
-.nav-desc {
-    font-family:'Cormorant Garamond',serif;
-    font-size:.92rem;
-    font-style:italic;
-    color:var(--muted);
-    line-height:1.7;
-}
+.nav-icon { font-size:3.2rem; margin-bottom:1.2rem; display:block; opacity:.9; }
+.nav-title { font-family:'Cinzel',serif; font-size:1.35rem; font-weight:700; letter-spacing:.1em; color:var(--gold3); margin-bottom:.6rem; }
+.nav-desc { font-family:'Cormorant Garamond',serif; font-size:.92rem; font-style:italic; color:var(--muted); line-height:1.7; }
 </style>
 </head>
 <body>
@@ -203,7 +165,6 @@ body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-
 <div class="hero-index">
     <div class="index-glow"></div>
     
-    <!-- Grande selo central (igual ao hino) -->
     <div class="seal-wrap-index">
       <svg viewBox="0 0 500 500" fill="none">
         <g class="seal-outer"><circle cx="250" cy="250" r="242" stroke="#6B0000" stroke-width="1.5" stroke-dasharray="6 8"/></g>
@@ -235,30 +196,29 @@ body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-
     </div>
 </div>
 
-<!-- Seção de navegação -->
 <div id="nav-grid" class="nav-grid">
   <div class="nav-card" onclick="window.location.href='thragg_legado.html'">
     <span class="nav-icon">Ⅰ</span>
     <div class="nav-title">LEGADO</div>
-    <div class="nav-desc">A história do mais poderoso ser do universo. O rei que nunca caiu.</div>
+    <div class="nav-desc">A história do mais poderoso ser do universo.</div>
   </div>
 
   <div class="nav-card" onclick="window.location.href='thragg_hino.html'">
     <span class="nav-icon">♪</span>
     <div class="nav-title">HINO</div>
-    <div class="nav-desc">Ouça o hino oficial do Grão-Regente. Die Young — Super Slowed.</div>
+    <div class="nav-desc">Ouça o hino oficial do Grão-Regente.</div>
   </div>
 
   <div class="nav-card" onclick="window.location.href='thragg_arquivo.html'">
     <span class="nav-icon">⬛</span>
     <div class="nav-title">ARQUIVO</div>
-    <div class="nav-desc">Transmissão visual ultra-secreta diretamente de Viltrum.</div>
+    <div class="nav-desc">Transmissão visual ultra-secreta de Viltrum.</div>
   </div>
 
   <div class="nav-card" onclick="window.location.href='thragg_admin.html'">
     <span class="nav-icon">⚙︎</span>
     <div class="nav-title">PAINEL IMPERIAL</div>
-    <div class="nav-desc">Acesso restrito • Apenas membros autorizados do Império.</div>
+    <div class="nav-desc">Acesso restrito • Apenas membros autorizados.</div>
   </div>
 </div>
 

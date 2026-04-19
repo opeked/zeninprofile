@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THRAGG • Império Viltrumita</title>
+<style id="shared-inject"></style>
+<style>
+/* ── ESTILO GERAL DA INDEX (igual ao resto) ── */
+body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-x:hidden; }
+
+.hero-index {
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    overflow:hidden;
+}
+
+.index-glow {
+    position:absolute;
+    inset:0;
+    background:radial-gradient(ellipse 75% 65% at 50% 45%, rgba(180,0,20,.25) 0%, transparent 70%),
+                linear-gradient(180deg, var(--void) 0%, var(--abyss) 40%, var(--deep) 70%, var(--void) 100%);
+}
+
+.seal-wrap-index {
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+    opacity:0.07;
+}
+
+.seal-wrap-index svg {
+    width: min(780px, 95vw);
+    height: min(780px, 95vw);
+}
+
+.hero-content-index {
+    position:relative;
+    z-index:10;
+}
+
+.hero-eyebrow {
+    font-family:'Orbitron',sans-serif;
+    font-size:.55rem;
+    letter-spacing:.95em;
+    color:var(--crimson);
+    text-transform:uppercase;
+    margin-bottom:2.2rem;
+    display:flex;
+    align-items:center;
+    gap:1.8rem;
+    justify-content:center;
+    opacity:0;
+    animation:rise .9s ease .4s forwards;
+}
+
+.hero-eyebrow::before,
+.hero-eyebrow::after {
+    content:'';
+    display:block;
+    width:65px;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--crimson));
+}
+
+.hero-eyebrow::after { transform:scaleX(-1); }
+
+.hero-name-index {
+    font-family:'Cinzel Decorative',serif;
+    font-size:clamp(4.2rem, 14vw, 9.5rem);
+    font-weight:900;
+    line-height:.85;
+    letter-spacing:.05em;
+    color:transparent;
+    background:linear-gradient(155deg, #FFF8E0 0%, var(--pale) 15%, var(--gold3) 32%, var(--gold2) 48%, #FFF5D0 55%, var(--gold2) 62%, var(--gold3) 75%, var(--pale) 88%, #FFF8E0 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    filter:drop-shadow(0 0 60px rgba(200,154,24,.45));
+    opacity:0;
+    animation:name-in 1.8s cubic-bezier(.1,1,.2,1) .6s forwards, gold-flow 8s linear 3s infinite;
+}
+
+.hero-divider {
+    display:flex;
+    align-items:center;
+    gap:1.4rem;
+    margin:2.4rem auto;
+    width:fit-content;
+    opacity:0;
+    animation:rise .9s ease 1.8s forwards;
+}
+
+.hd-line { height:1px; background:linear-gradient(90deg, transparent, var(--gold2), transparent); }
+.hd-line.long { width:180px; }
+.hd-line.short { width:55px; }
+.hd-gem { width:9px; height:9px; background:var(--gold3); clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%); }
+
+.hero-sub-index {
+    font-family:'Cinzel',serif;
+    font-size:clamp(.65rem, 1.4vw, .85rem);
+    letter-spacing:.45em;
+    color:var(--muted);
+    text-transform:uppercase;
+    line-height:2.2;
+    opacity:0;
+    animation:rise .9s ease 2.4s forwards;
+}
+
+.enter-btn {
+    margin-top:4rem;
+    padding:1.1rem 3.2rem;
+    font-family:'Cinzel',serif;
+    font-size:.85rem;
+    letter-spacing:.35em;
+    text-transform:uppercase;
+    background:linear-gradient(135deg, var(--blood), var(--blood2));
+    border:1px solid rgba(204,16,32,.6);
+    color:var(--pale);
+    cursor:pointer;
+    transition:all .3s;
+    opacity:0;
+    animation:rise .9s ease 3s forwards;
+}
+
+.enter-btn:hover {
+    background:linear-gradient(135deg, var(--blood2), var(--crimson));
+    border-color:var(--crimson);
+    transform:scale(1.03);
+    box-shadow:0 0 30px rgba(204,16,32,.4);
+}
+
+/* Cards de navegação */
+.nav-grid {
+    max-width:1180px;
+    margin:0 auto;
+    padding:5rem 2rem 8rem;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
+    gap:2rem;
+}
+
+.nav-card {
+    background:linear-gradient(160deg, var(--deep2), var(--deep));
+    border:1px solid rgba(120,0,0,.35);
+    border-top:3px solid var(--blood2);
+    padding:2.2rem 1.8rem;
+    position:relative;
+    overflow:hidden;
+    transition:all .4s;
+    cursor:pointer;
+}
+
+.nav-card:hover {
+    transform:translateY(-12px);
+    border-color:var(--crimson);
+    box-shadow:0 20px 40px rgba(120,0,0,.3);
+}
+
+.nav-card::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:2px;
+    background:linear-gradient(90deg, transparent, var(--blood2), var(--crimson), var(--blood2), transparent);
+}
+
+.nav-icon {
+    font-size:3.2rem;
+    margin-bottom:1.2rem;
+    display:block;
+    opacity:.9;
+}
+
+.nav-title {
+    font-family:'Cinzel',serif;
+    font-size:1.35rem;
+    font-weight:700;
+    letter-spacing:.1em;
+    color:var(--gold3);
+    margin-bottom:.6rem;
+}
+
+.nav-desc {
+    font-family:'Cormorant Garamond',serif;
+    font-size:.92rem;
+    font-style:italic;
+    color:var(--muted);
+    line-height:1.7;
+}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div id="nav-mount"></div>
+
+<div class="hero-index">
+    <div class="index-glow"></div>
+    
+    <!-- Grande selo central (igual ao hino) -->
+    <div class="seal-wrap-index">
+      <svg viewBox="0 0 500 500" fill="none">
+        <g class="seal-outer"><circle cx="250" cy="250" r="242" stroke="#6B0000" stroke-width="1.5" stroke-dasharray="6 8"/></g>
+        <g class="seal-mid"><circle cx="250" cy="250" r="195" stroke="#7A0000" stroke-width="2"/>
+          <polygon points="250,55 268,220 250,445 232,220" fill="rgba(180,0,20,.25)" stroke="#AA0010" stroke-width="2"/>
+          <polygon points="55,250 220,232 445,250 220,268" fill="rgba(180,0,20,.18)" stroke="#8A0000" stroke-width="1"/>
+        </g>
+        <g class="seal-inner"><circle cx="250" cy="250" r="130" stroke="#AA0010" stroke-width="2.5"/>
+          <circle cx="250" cy="250" r="42" stroke="#CC1020" stroke-width="2" fill="rgba(180,0,20,.25)"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="hero-content-index">
+      <div class="hero-eyebrow">IMPÉRIO VILTRUMITA • ANO 3000</div>
+      <h1 class="hero-name-index">THRAGG</h1>
+      <div class="hero-divider">
+        <div class="hd-line long"></div>
+        <div class="hd-gem"></div>
+        <div class="hd-line short"></div>
+        <div class="hd-gem"></div>
+        <div class="hd-line long"></div>
+      </div>
+      <p class="hero-sub-index">Grão-Regente • Conquistador Supremo • Eterno</p>
+      
+      <button class="enter-btn" onclick="document.getElementById('nav-grid').scrollIntoView({behavior:'smooth'})">
+        ◆ ACESSAR O IMPÉRIO ◆
+      </button>
+    </div>
+</div>
+
+<!-- Seção de navegação -->
+<div id="nav-grid" class="nav-grid">
+  <div class="nav-card" onclick="window.location.href='thragg_legado.html'">
+    <span class="nav-icon">Ⅰ</span>
+    <div class="nav-title">LEGADO</div>
+    <div class="nav-desc">A história do mais poderoso ser do universo. O rei que nunca caiu.</div>
+  </div>
+
+  <div class="nav-card" onclick="window.location.href='thragg_hino.html'">
+    <span class="nav-icon">♪</span>
+    <div class="nav-title">HINO</div>
+    <div class="nav-desc">Ouça o hino oficial do Grão-Regente. Die Young — Super Slowed.</div>
+  </div>
+
+  <div class="nav-card" onclick="window.location.href='thragg_arquivo.html'">
+    <span class="nav-icon">⬛</span>
+    <div class="nav-title">ARQUIVO</div>
+    <div class="nav-desc">Transmissão visual ultra-secreta diretamente de Viltrum.</div>
+  </div>
+
+  <div class="nav-card" onclick="window.location.href='thragg_admin.html'">
+    <span class="nav-icon">⚙︎</span>
+    <div class="nav-title">PAINEL IMPERIAL</div>
+    <div class="nav-desc">Acesso restrito • Apenas membros autorizados do Império.</div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <span class="ft-logo">THRAGG</span>
+  <div class="ft-sub">Império Viltrumita • Sangue Puro • Domínio Eterno</div>
+</footer>
+
+<script src="thragg_data.js"></script>
+<script>
+document.getElementById('shared-inject').textContent = SHARED_CSS;
+document.getElementById('nav-mount').innerHTML = renderNav('index');
+initBgCanvas();
+DB.bumpVisit('Index');
+</script>
+</body>
+</html>

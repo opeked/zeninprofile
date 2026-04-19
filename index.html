@@ -6,7 +6,14 @@
 <title>THRAGG • Império Viltrumita</title>
 <style id="shared-inject"></style>
 <style>
-body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-x:hidden; font-family:system-ui; }
+/* ESTILO PRINCIPAL - Mantido igual ao tema das outras páginas */
+body { 
+    margin:0; 
+    padding:0; 
+    background:var(--void); 
+    color:var(--text); 
+    overflow-x:hidden; 
+}
 
 .hero-index {
     position:relative;
@@ -21,8 +28,8 @@ body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-
 .index-glow {
     position:absolute;
     inset:0;
-    background:radial-gradient(ellipse 75% 65% at 50% 45%, rgba(180,0,20,.25) 0%, transparent 70%),
-                linear-gradient(180deg, var(--void) 0%, var(--abyss) 40%, var(--deep) 70%, var(--void) 100%);
+    background:radial-gradient(ellipse 75% 65% at 50% 45%, rgba(180,0,20,.28) 0%, transparent 70%),
+                linear-gradient(180deg, var(--void) 0%, var(--abyss) 35%, var(--deep) 70%, var(--void) 100%);
 }
 
 .seal-wrap-index {
@@ -32,23 +39,26 @@ body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-
     align-items:center;
     justify-content:center;
     pointer-events:none;
-    opacity:0.07;
+    opacity:0.065;
 }
 
 .seal-wrap-index svg {
-    width: min(780px, 95vw);
-    height: min(780px, 95vw);
+    width: min(820px, 96vw);
+    height: min(820px, 96vw);
 }
 
-.hero-content-index { position:relative; z-index:10; }
+.hero-content-index {
+    position:relative;
+    z-index:10;
+}
 
 .hero-eyebrow {
     font-family:'Orbitron',sans-serif;
-    font-size:.55rem;
-    letter-spacing:.95em;
+    font-size:.54rem;
+    letter-spacing:.98em;
     color:var(--crimson);
     text-transform:uppercase;
-    margin-bottom:2.2rem;
+    margin-bottom:2.4rem;
     display:flex;
     align-items:center;
     gap:1.8rem;
@@ -59,83 +69,98 @@ body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-
 
 .hero-eyebrow::before,
 .hero-eyebrow::after {
-    content:''; display:block; width:65px; height:1px;
+    content:''; 
+    display:block; 
+    width:68px; 
+    height:1px;
     background:linear-gradient(90deg, transparent, var(--crimson));
 }
 .hero-eyebrow::after { transform:scaleX(-1); }
 
 .hero-name-index {
     font-family:'Cinzel Decorative',serif;
-    font-size:clamp(4.2rem, 14vw, 9.5rem);
+    font-size:clamp(4.5rem, 15vw, 10rem);
     font-weight:900;
-    line-height:.85;
-    letter-spacing:.05em;
+    line-height:.82;
+    letter-spacing:.04em;
     color:transparent;
-    background:linear-gradient(155deg, #FFF8E0 0%, var(--pale) 15%, var(--gold3) 32%, var(--gold2) 48%, #FFF5D0 55%, var(--gold2) 62%, var(--gold3) 75%, var(--pale) 88%, #FFF8E0 100%);
+    background:linear-gradient(155deg, #FFF8E0 0%, var(--pale) 15%, var(--gold3) 33%, var(--gold2) 50%, #FFF5D0 57%, var(--gold2) 65%, var(--gold3) 78%, var(--pale) 90%, #FFF8E0 100%);
     -webkit-background-clip:text;
     background-clip:text;
-    filter:drop-shadow(0 0 60px rgba(200,154,24,.45));
+    filter:drop-shadow(0 0 65px rgba(200,154,24,.5));
     opacity:0;
-    animation:name-in 1.8s cubic-bezier(.1,1,.2,1) .6s forwards, gold-flow 8s linear 3s infinite;
+    animation:name-in 1.9s cubic-bezier(.1,1,.2,1) .6s forwards, gold-flow 9s linear 3s infinite;
 }
 
 .hero-divider {
-    display:flex; align-items:center; gap:1.4rem; margin:2.4rem auto; width:fit-content;
-    opacity:0; animation:rise .9s ease 1.8s forwards;
+    display:flex;
+    align-items:center;
+    gap:1.5rem;
+    margin:2.6rem auto;
+    width:fit-content;
+    opacity:0;
+    animation:rise .9s ease 1.9s forwards;
 }
 
 .hd-line { height:1px; background:linear-gradient(90deg, transparent, var(--gold2), transparent); }
-.hd-line.long { width:180px; }
-.hd-line.short { width:55px; }
-.hd-gem { width:9px; height:9px; background:var(--gold3); clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%); }
+.hd-line.long { width:190px; }
+.hd-line.short { width:58px; }
+.hd-gem { 
+    width:10px; 
+    height:10px; 
+    background:var(--gold3); 
+    clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%); 
+}
 
 .hero-sub-index {
     font-family:'Cinzel',serif;
-    font-size:clamp(.65rem, 1.4vw, .85rem);
-    letter-spacing:.45em;
+    font-size:clamp(.68rem, 1.5vw, .88rem);
+    letter-spacing:.48em;
     color:var(--muted);
     text-transform:uppercase;
-    line-height:2.2;
+    line-height:2.3;
     opacity:0;
-    animation:rise .9s ease 2.4s forwards;
+    animation:rise .9s ease 2.5s forwards;
 }
 
 .enter-btn {
-    margin-top:4rem;
-    padding:1.1rem 3.2rem;
+    margin-top:4.5rem;
+    padding:1.15rem 3.5rem;
     font-family:'Cinzel',serif;
-    font-size:.85rem;
-    letter-spacing:.35em;
+    font-size:.87rem;
+    letter-spacing:.38em;
     text-transform:uppercase;
     background:linear-gradient(135deg, var(--blood), var(--blood2));
-    border:1px solid rgba(204,16,32,.6);
+    border:1px solid rgba(204,16,32,.65);
     color:var(--pale);
     cursor:pointer;
     transition:all .3s;
     opacity:0;
-    animation:rise .9s ease 3s forwards;
+    animation:rise .9s ease 3.2s forwards;
 }
 
 .enter-btn:hover {
     background:linear-gradient(135deg, var(--blood2), var(--crimson));
     border-color:var(--crimson);
-    transform:scale(1.03);
+    transform:scale(1.04);
+    box-shadow:0 0 35px rgba(204,16,32,.45);
 }
 
+/* Cards */
 .nav-grid {
-    max-width:1180px;
+    max-width:1200px;
     margin:0 auto;
-    padding:5rem 2rem 8rem;
+    padding:6rem 2rem 9rem;
     display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
-    gap:2rem;
+    grid-template-columns:repeat(auto-fit, minmax(340px, 1fr));
+    gap:2.2rem;
 }
 
 .nav-card {
     background:linear-gradient(160deg, var(--deep2), var(--deep));
-    border:1px solid rgba(120,0,0,.35);
+    border:1px solid rgba(120,0,0,.38);
     border-top:3px solid var(--blood2);
-    padding:2.2rem 1.8rem;
+    padding:2.4rem 2rem;
     position:relative;
     overflow:hidden;
     transition:all .4s;
@@ -143,19 +168,42 @@ body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-
 }
 
 .nav-card:hover {
-    transform:translateY(-12px);
+    transform:translateY(-15px);
     border-color:var(--crimson);
-    box-shadow:0 20px 40px rgba(120,0,0,.3);
+    box-shadow:0 25px 45px rgba(120,0,0,.35);
 }
 
 .nav-card::before {
-    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    content:''; 
+    position:absolute; 
+    top:0; left:0; right:0; 
+    height:2px;
     background:linear-gradient(90deg, transparent, var(--blood2), var(--crimson), var(--blood2), transparent);
 }
 
-.nav-icon { font-size:3.2rem; margin-bottom:1.2rem; display:block; opacity:.9; }
-.nav-title { font-family:'Cinzel',serif; font-size:1.35rem; font-weight:700; letter-spacing:.1em; color:var(--gold3); margin-bottom:.6rem; }
-.nav-desc { font-family:'Cormorant Garamond',serif; font-size:.92rem; font-style:italic; color:var(--muted); line-height:1.7; }
+.nav-icon {
+    font-size:3.6rem;
+    margin-bottom:1.4rem;
+    display:block;
+    opacity:0.95;
+}
+
+.nav-title {
+    font-family:'Cinzel',serif;
+    font-size:1.4rem;
+    font-weight:700;
+    letter-spacing:.12em;
+    color:var(--gold3);
+    margin-bottom:.7rem;
+}
+
+.nav-desc {
+    font-family:'Cormorant Garamond',serif;
+    font-size:.93rem;
+    font-style:italic;
+    color:var(--muted);
+    line-height:1.75;
+}
 </style>
 </head>
 <body>
@@ -191,7 +239,7 @@ body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-
       <p class="hero-sub-index">Grão-Regente • Conquistador Supremo • Eterno</p>
       
       <button class="enter-btn" onclick="document.getElementById('nav-grid').scrollIntoView({behavior:'smooth'})">
-        ◆ ACESSAR O IMPÉRIO ◆
+        ◆ ENTRAR NO IMPÉRIO ◆
       </button>
     </div>
 </div>
@@ -200,25 +248,25 @@ body { margin:0; padding:0; background:var(--void); color:var(--text); overflow-
   <div class="nav-card" onclick="window.location.href='thragg_legado.html'">
     <span class="nav-icon">Ⅰ</span>
     <div class="nav-title">LEGADO</div>
-    <div class="nav-desc">A história do mais poderoso ser do universo.</div>
+    <div class="nav-desc">A história do mais poderoso ser do universo</div>
   </div>
 
   <div class="nav-card" onclick="window.location.href='thragg_hino.html'">
     <span class="nav-icon">♪</span>
     <div class="nav-title">HINO</div>
-    <div class="nav-desc">Ouça o hino oficial do Grão-Regente.</div>
+    <div class="nav-desc">O som oficial do Império Viltrumita</div>
   </div>
 
   <div class="nav-card" onclick="window.location.href='thragg_arquivo.html'">
     <span class="nav-icon">⬛</span>
     <div class="nav-title">ARQUIVO</div>
-    <div class="nav-desc">Transmissão visual ultra-secreta de Viltrum.</div>
+    <div class="nav-desc">Transmissão visual ultra-secreta</div>
   </div>
 
   <div class="nav-card" onclick="window.location.href='thragg_admin.html'">
     <span class="nav-icon">⚙︎</span>
     <div class="nav-title">PAINEL IMPERIAL</div>
-    <div class="nav-desc">Acesso restrito • Apenas membros autorizados.</div>
+    <div class="nav-desc">Acesso restrito ao Grão-Regente</div>
   </div>
 </div>
 

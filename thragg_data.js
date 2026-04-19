@@ -165,13 +165,22 @@ function renderNav(activePage){
     { id:'admin', label:'Admin', href:'thragg_admin.html', special:true },
   ];
   const v = DB.getVisits();
+  
+  // Determine active page
+  let active = activePage;
+  if(!active){
+    const current = window.location.pathname.split('/').pop().replace('.html','').replace('thragg_','');
+    active = current || 'hino';
+  }
+  
   return `
   <nav class="site-nav">
     <a class="nav-logo" href="thragg_hino.html">THRAGG</a>
     <div class="nav-links">
-      ${pages.map(p => `
-        <a class="nav-link${p.id===activePage?' active':''}${p.special?' nav-admin':''}" href="${p.href}">${p.label}</a>
-      `).join('')}
+      ${pages.map(p => {
+        const isActive = (p.id === active || (active === '' && p.id === 'hino'));
+        return `<a class="nav-link${isActive ? ' active' : ''}${p.special ? ' nav-admin' : ''}" href="${p.href}">${p.label}</a>`;
+      }).join('')}
     </div>
     <div class="nav-visits">Visitas <span class="nav-visits-num">${(v.total||0).toLocaleString('pt-BR')}</span></div>
   </nav>`;
@@ -190,7 +199,7 @@ html{scroll-behavior:smooth}
 body{background:var(--void);color:var(--text);font-family:'Cormorant Garamond',serif;overflow-x:hidden;min-height:100vh}
 #bg-canvas{position:fixed;inset:0;pointer-events:none;z-index:0}
 body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.05) 2px,rgba(0,0,0,.05) 4px);pointer-events:none;z-index:9999}
- 
+
 /* NAV */
 .site-nav{position:fixed;top:0;left:0;right:0;z-index:8000;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2.5rem;background:linear-gradient(180deg,rgba(2,0,8,.97),rgba(2,0,8,.75));border-bottom:1px solid rgba(170,0,16,.35);backdrop-filter:blur(10px)}
 .nav-logo{font-family:'Cinzel Decorative',serif;font-size:1rem;font-weight:900;letter-spacing:.2em;color:transparent;background:linear-gradient(90deg,var(--gold2),var(--gold3),var(--gold2));-webkit-background-clip:text;background-clip:text;text-decoration:none}
@@ -203,22 +212,22 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .nav-admin:hover,.nav-admin.active{color:var(--crimson)!important;background:rgba(200,16,32,.1)!important}
 .nav-visits{font-family:'Orbitron',sans-serif;font-size:.38rem;letter-spacing:.4em;color:var(--dim);text-transform:uppercase;display:flex;align-items:center;gap:.5rem}
 .nav-visits-num{color:var(--crimson);font-size:.55rem;font-weight:600}
- 
+
 /* PAGE WRAPPER */
 .page-wrap{padding-top:60px;min-height:100vh;position:relative;z-index:1}
- 
+
 /* SECTION COMMONS */
 .s-tag{font-family:'Orbitron',sans-serif;font-size:.46rem;letter-spacing:.75em;color:var(--blood2);text-transform:uppercase;text-align:center;margin-bottom:.9rem;display:flex;align-items:center;justify-content:center;gap:1.2rem}
 .s-tag::before,.s-tag::after{content:'';display:block;width:30px;height:1px;background:linear-gradient(90deg,transparent,var(--blood2))}
 .s-tag::after{transform:scaleX(-1)}
 .s-title{font-family:'Cinzel',serif;font-size:clamp(1.4rem,3.5vw,2.4rem);font-weight:700;color:var(--pale);text-align:center;letter-spacing:.12em;margin-bottom:3rem;text-shadow:0 0 40px rgba(200,154,24,.2)}
- 
+
 /* FOOTER */
 .site-footer{position:relative;padding:3rem 2rem;text-align:center;background:var(--void);border-top:1px solid rgba(120,0,0,.3);overflow:hidden}
 .site-footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--crimson),var(--gold2),var(--crimson),transparent)}
 .ft-logo{font-family:'Cinzel Decorative',serif;font-size:1.2rem;font-weight:900;letter-spacing:.15em;color:transparent;background:linear-gradient(135deg,var(--gold) 30%,var(--gold3) 60%,var(--gold) 90%);-webkit-background-clip:text;background-clip:text;display:block;margin-bottom:.5rem}
 .ft-sub{font-family:'Orbitron',sans-serif;font-size:.38rem;letter-spacing:.55em;color:var(--dim);text-transform:uppercase;line-height:2}
- 
+
 /* ANIMATIONS */
 @keyframes spin-cw{to{transform:rotate(360deg)}}
 @keyframes spin-ccw{to{transform:rotate(-360deg)}}
@@ -231,7 +240,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 @keyframes drip{0%{height:0;opacity:1}75%{opacity:1}100%{height:60px;opacity:0}}
 @keyframes pip-pulse{0%,100%{box-shadow:0 0 12px var(--fire),0 0 30px rgba(232,48,32,.3)}50%{box-shadow:0 0 25px var(--ember),0 0 60px rgba(232,48,32,.6)}}
 `;
- 
+
 /* ── PARTICLE BACKGROUND (shared init) ── */
 function initBgCanvas(){
   const cv=document.getElementById('bg-canvas');if(!cv)return;

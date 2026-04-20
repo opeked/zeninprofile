@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════
    THRAGG EMPIRE — SHARED DATA ENGINE
-   Captura de IP corrigida e otimizada
+   Captura de IP com múltiplas APIs (fallback)
 ═══════════════════════════════════════════════ */
 
 const DB = {
@@ -50,7 +50,9 @@ const DB = {
       lang: navigator.language || '—',
       screen: window.screen.width + '×' + window.screen.height,
       ip: 'Carregando...',
-      location: '—'
+      location: '—',
+      isp: '—',
+      timezone: '—'
     };
 
     // Adiciona imediatamente
@@ -61,24 +63,80 @@ const DB = {
 
     if (typeof renderDB === 'function') renderDB();
 
-    // Busca o IP real
-    fetch('https://api.ipify.org?format=json')
+    /* Captura de IP com fallback em múltiplas APIs */
+    this._fetchIPData(entry, v);
+  },
+
+  _fetchIPData(entry, visitsData){
+    // Try primary API first: ipapi.co (muito confiável)
+    fetch('https://ipapi.co/json/', { timeout: 5000 })
       .then(r => r.json())
       .then(data => {
-        entry.ip = data.ip || '—';
-        return fetch(`https://ipapi.co/${entry.ip}/json/`);
-      })
-      .then(r => r.json())
-      .then(loc => {
-        entry.location = `${loc.city || ''}, ${loc.country_name || ''}`.trim() || 'Desconhecido';
-        this.set('tg_visits', v);
-        if (typeof renderDB === 'function') renderDB();
+        if(data.ip){
+          entry.ip = data.ip;
+          entry.location = `${data.city || ''}, ${data.country_name || ''}`.trim() || 'Desconhecido';
+          entry.isp = data.org || '—';
+          entry.timezone = data.timezone || '—';
+          this.set('tg_visits', visitsData);
+          if (typeof renderDB === 'function') renderDB();
+          return;
+        }
+        throw new Error('ipapi.co falhou');
       })
       .catch(() => {
-        entry.ip = '—';
-        entry.location = '—';
-        this.set('tg_visits', v);
-        if (typeof renderDB === 'function') renderDB();
+        // Fallback 2: ip-api.com (speedtest)
+        fetch('http://ip-api.com/json/')
+          .then(r => r.json())
+          .then(data => {
+            if(data.status === 'success'){
+              entry.ip = data.query;
+              entry.location = `${data.city || ''}, ${data.country || ''}`.trim() || 'Desconhecido';
+              entry.isp = data.isp || '—';
+              entry.timezone = data.timezone || '—';
+              this.set('tg_visits', visitsData);
+              if (typeof renderDB === 'function') renderDB();
+              return;
+            }
+            throw new Error('ip-api falhou');
+          })
+          .catch(() => {
+            // Fallback 3: geoip-db.com
+            fetch('https://geoip-db.com/json/')
+              .then(r => r.json())
+              .then(data => {
+                if(data.IPv4){
+                  entry.ip = data.IPv4;
+                  entry.location = `${data.city || ''}, ${data.country_name || ''}`.trim() || 'Desconhecido';
+                  entry.isp = data.isp || '—';
+                  entry.timezone = data.timezone || '—';
+                  this.set('tg_visits', visitsData);
+                  if (typeof renderDB === 'function') renderDB();
+                  return;
+                }
+                throw new Error('geoip-db falhou');
+              })
+              .catch(() => {
+                // Fallback 4: ipify (mínimo - apenas IP)
+                fetch('https://api.ipify.org?format=json')
+                  .then(r => r.json())
+                  .then(data => {
+                    entry.ip = data.ip || '—';
+                    entry.location = '—';
+                    entry.isp = '—';
+                    entry.timezone = '—';
+                    this.set('tg_visits', visitsData);
+                    if (typeof renderDB === 'function') renderDB();
+                  })
+                  .catch(() => {
+                    entry.ip = '—';
+                    entry.location = '—';
+                    entry.isp = '—';
+                    entry.timezone = '—';
+                    this.set('tg_visits', visitsData);
+                    if (typeof renderDB === 'function') renderDB();
+                  });
+              });
+          });
       });
   },
 
@@ -159,6 +217,7 @@ function generateCredential(label){
 
 function renderNav(activePage){
   const pages = [
+    { id:'index', label:'Início', href:'index.html' },
     { id:'hino', label:'Hino', href:'thragg_hino.html' },
     { id:'arquivo', label:'Arquivo', href:'thragg_arquivo.html' },
     { id:'legado', label:'Legado', href:'thragg_legado.html' },
@@ -170,15 +229,15 @@ function renderNav(activePage){
   let active = activePage;
   if(!active){
     const current = window.location.pathname.split('/').pop().replace('.html','').replace('thragg_','');
-    active = current || 'hino';
+    active = current || 'index';
   }
   
   return `
   <nav class="site-nav">
-    <a class="nav-logo" href="thragg_hino.html">THRAGG</a>
+    <a class="nav-logo" href="index.html">THRAGG</a>
     <div class="nav-links">
       ${pages.map(p => {
-        const isActive = (p.id === active || (active === '' && p.id === 'hino'));
+        const isActive = (p.id === active || (active === '' && p.id === 'index'));
         return `<a class="nav-link${isActive ? ' active' : ''}${p.special ? ' nav-admin' : ''}" href="${p.href}">${p.label}</a>`;
       }).join('')}
     </div>

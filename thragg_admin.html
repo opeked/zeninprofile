@@ -271,6 +271,11 @@ document.getElementById('nav-mount').innerHTML = renderNav('admin');
 initBgCanvas();
 DB.log('Página de admin acessada','admin');
 
+// Force refresh da database ao carregar
+setTimeout(() => {
+  if(typeof renderDB === 'function') renderDB();
+}, 500);
+
 let currentUser = null;
 
 function doLogin(){

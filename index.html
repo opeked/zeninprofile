@@ -6,7 +6,7 @@
 <title>THRAGG • Império Viltrumita</title>
 <style id="shared-inject"></style>
 <style>
-/* ESTILO PRINCIPAL - Mantido igual ao tema das outras páginas */
+/* ESTILO PRINCIPAL */
 body { 
     margin:0; 
     padding:0; 
@@ -23,6 +23,7 @@ body {
     justify-content:center;
     text-align:center;
     overflow:hidden;
+    padding-top:60px;
 }
 
 .index-glow {
@@ -146,7 +147,7 @@ body {
     box-shadow:0 0 35px rgba(204,16,32,.45);
 }
 
-/* Cards */
+/* Cards Grid */
 .nav-grid {
     max-width:1200px;
     margin:0 auto;
@@ -154,6 +155,8 @@ body {
     display:grid;
     grid-template-columns:repeat(auto-fit, minmax(340px, 1fr));
     gap:2.2rem;
+    position:relative;
+    z-index:1;
 }
 
 .nav-card {
@@ -165,6 +168,9 @@ body {
     overflow:hidden;
     transition:all .4s;
     cursor:pointer;
+    text-decoration:none;
+    color:inherit;
+    display:block;
 }
 
 .nav-card:hover {
@@ -203,6 +209,11 @@ body {
     font-style:italic;
     color:var(--muted);
     line-height:1.75;
+}
+
+@media(max-width:768px){
+    .nav-grid{grid-template-columns:1fr;padding:4rem 1.5rem 6rem}
+    .hero-index{padding-top:70px}
 }
 </style>
 </head>
@@ -245,29 +256,29 @@ body {
 </div>
 
 <div id="nav-grid" class="nav-grid">
-  <div class="nav-card" onclick="window.location.href='thragg_legado.html'">
+  <a class="nav-card" href="thragg_legado.html">
     <span class="nav-icon">Ⅰ</span>
     <div class="nav-title">LEGADO</div>
     <div class="nav-desc">A história do mais poderoso ser do universo</div>
-  </div>
+  </a>
 
-  <div class="nav-card" onclick="window.location.href='thragg_hino.html'">
+  <a class="nav-card" href="thragg_hino.html">
     <span class="nav-icon">♪</span>
     <div class="nav-title">HINO</div>
     <div class="nav-desc">O som oficial do Império Viltrumita</div>
-  </div>
+  </a>
 
-  <div class="nav-card" onclick="window.location.href='thragg_arquivo.html'">
+  <a class="nav-card" href="thragg_arquivo.html">
     <span class="nav-icon">⬛</span>
     <div class="nav-title">ARQUIVO</div>
     <div class="nav-desc">Transmissão visual ultra-secreta</div>
-  </div>
+  </a>
 
-  <div class="nav-card" onclick="window.location.href='thragg_admin.html'">
+  <a class="nav-card" href="thragg_admin.html">
     <span class="nav-icon">⚙︎</span>
     <div class="nav-title">PAINEL IMPERIAL</div>
     <div class="nav-desc">Acesso restrito ao Grão-Regente</div>
-  </div>
+  </a>
 </div>
 
 <footer class="site-footer">
@@ -280,7 +291,7 @@ body {
 document.getElementById('shared-inject').textContent = SHARED_CSS;
 document.getElementById('nav-mount').innerHTML = renderNav('index');
 initBgCanvas();
-DB.bumpVisit('Index');
+DB.bumpVisit('Início');
 </script>
 </body>
 </html>

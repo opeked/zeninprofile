@@ -49,7 +49,7 @@ const DB = {
       os,
       lang: navigator.language || '—',
       screen: window.screen.width + '×' + window.screen.height,
-      ip: 'Carregando...',
+      ip: '—',
       location: '—',
       isp: '—',
       timezone: '—'
@@ -68,71 +68,107 @@ const DB = {
   },
 
   _fetchIPData(entry, visitsData){
-    const timeout = (ms, promise) => Promise.race([
-      promise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
-    ]);
-
-    // Try ipify first (mais rápido - apenas IP)
-    timeout(2000, fetch('https://api.ipify.org?format=json').then(r => r.json()))
+    const self = this;
+    
+    // Try API 1: ip-api.com (mais completo - GET sem CORS)
+    fetch('https://ip-api.com/json/', { method: 'GET' })
+      .then(r => {
+        if(!r.ok) throw new Error('HTTP error');
+        return r.json();
+      })
       .then(data => {
-        if(data.ip){
-          entry.ip = data.ip;
-          this.set('tg_visits', visitsData);
+        if(data.status === 'success' && data.query){
+          entry.ip = data.query || '—';
+          entry.location = `${data.city || ''}, ${data.country || ''}`.trim() || 'Desconhecido';
+          entry.isp = data.isp || '—';
+          entry.timezone = data.timezone || '—';
+          self.set('tg_visits', visitsData);
           if (typeof renderDB === 'function') renderDB();
-          // Fetch location data separately
-          this._fetchLocation(data.ip, entry, visitsData);
           return;
         }
-        throw new Error('ipify falhou');
+        throw new Error('ip-api falhou');
       })
       .catch(() => {
-        // Fallback: ip-api.com (mais completo)
-        timeout(3000, fetch('https://ip-api.com/json/').then(r => r.json()))
+        // Try API 2: ipapi.co
+        fetch('https://ipapi.co/json/', { 
+          method: 'GET',
+          headers: { 'Accept': 'application/json' }
+        })
+          .then(r => {
+            if(!r.ok) throw new Error('HTTP error');
+            return r.json();
+          })
           .then(data => {
-            if(data.status === 'success'){
-              entry.ip = data.query;
-              entry.location = `${data.city || ''}, ${data.country || ''}`.trim() || 'Desconhecido';
-              entry.isp = data.isp || '—';
+            if(data.ip){
+              entry.ip = data.ip || '—';
+              entry.location = `${data.city || ''}, ${data.country_name || ''}`.trim() || 'Desconhecido';
+              entry.isp = data.org || '—';
               entry.timezone = data.timezone || '—';
-              this.set('tg_visits', visitsData);
+              self.set('tg_visits', visitsData);
               if (typeof renderDB === 'function') renderDB();
               return;
             }
-            throw new Error('ip-api falhou');
+            throw new Error('ipapi.co falhou');
           })
           .catch(() => {
-            // Final fallback: marca como —
-            entry.ip = '—';
-            entry.location = '—';
-            entry.isp = '—';
-            entry.timezone = '—';
-            this.set('tg_visits', visitsData);
-            if (typeof renderDB === 'function') renderDB();
+            // Try API 3: geoip-db.com
+            fetch('https://geoip-db.com/json/')
+              .then(r => {
+                if(!r.ok) throw new Error('HTTP error');
+                return r.json();
+              })
+              .then(data => {
+                if(data.IPv4){
+                  entry.ip = data.IPv4 || '—';
+                  entry.location = `${data.city || ''}, ${data.country_name || ''}`.trim() || 'Desconhecido';
+                  entry.isp = data.isp || '—';
+                  entry.timezone = data.timezone || '—';
+                  self.set('tg_visits', visitsData);
+                  if (typeof renderDB === 'function') renderDB();
+                  return;
+                }
+                throw new Error('geoip-db falhou');
+              })
+              .catch(() => {
+                // Try API 4: ipify + separate location call
+                fetch('https://api.ipify.org?format=json')
+                  .then(r => r.json())
+                  .then(ipData => {
+                    entry.ip = ipData.ip || '—';
+                    self.set('tg_visits', visitsData);
+                    if (typeof renderDB === 'function') renderDB();
+                    
+                    // Now try to get location for this IP
+                    fetch(`https://ipapi.co/${ipData.ip}/json/`)
+                      .then(r => r.json())
+                      .then(locData => {
+                        if(locData.city || locData.country_name){
+                          entry.location = `${locData.city || ''}, ${locData.country_name || ''}`.trim() || 'Desconhecido';
+                          entry.isp = locData.org || '—';
+                          entry.timezone = locData.timezone || '—';
+                        }
+                        self.set('tg_visits', visitsData);
+                        if (typeof renderDB === 'function') renderDB();
+                      })
+                      .catch(() => {
+                        entry.location = 'Desconhecido';
+                        entry.isp = '—';
+                        entry.timezone = '—';
+                        self.set('tg_visits', visitsData);
+                        if (typeof renderDB === 'function') renderDB();
+                      });
+                  })
+                  .catch(() => {
+                    // All APIs failed
+                    entry.ip = '—';
+                    entry.location = 'Desconhecido';
+                    entry.isp = '—';
+                    entry.timezone = '—';
+                    self.set('tg_visits', visitsData);
+                    if (typeof renderDB === 'function') renderDB();
+                  });
+              });
           });
-      });
-  },
-
-  _fetchLocation(ip, entry, visitsData){
-    const timeout = (ms, promise) => Promise.race([
-      promise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
-    ]);
-
-    // Try ipapi.co for location details
-    timeout(2000, fetch(`https://ipapi.co/${ip}/json/`).then(r => r.json()))
-      .then(data => {
-        if(data.city || data.country_name){
-          entry.location = `${data.city || ''}, ${data.country_name || ''}`.trim() || 'Desconhecido';
-          entry.isp = data.org || entry.isp;
-          entry.timezone = data.timezone || '—';
-          this.set('tg_visits', visitsData);
-          if (typeof renderDB === 'function') renderDB();
-        }
-      })
-      .catch(() => {
-        // Silent fail - IP já foi capturado
-        this.set('tg_visits', visitsData);
       });
   },
 

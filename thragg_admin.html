@@ -190,11 +190,13 @@
               <th>Sistema</th>
               <th>IP</th>
               <th>Localização</th>
+              <th>ISP</th>
+              <th>Timezone</th>
               <th>Tela</th>
             </tr>
           </thead>
           <tbody id="db-tbody">
-            <tr><td colspan="8"><div class="db-empty">Nenhum registro encontrado.</div></td></tr>
+            <tr><td colspan="10"><div class="db-empty">Nenhum registro encontrado.</div></td></tr>
           </tbody>
         </table>
       </div>
@@ -317,13 +319,11 @@ function renderDB(){
   const v = DB.getVisits();
   const log = v.log || [];
   document.getElementById('db-count').textContent = log.length;
-
   if(!log.length){
-    tbody.innerHTML = '<tr><td colspan="8"><div class="db-empty">Nenhum registro encontrado.</div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10"><div class="db-empty">Nenhum registro encontrado.</div></td></tr>';
     return;
   }
-
-  tbody.innerHTML = log.map((e, i) => `
+  tbody.innerHTML = log.map((e,i)=>`
     <tr>
       <td>${i+1}</td>
       <td>${e.time}</td>
@@ -332,6 +332,8 @@ function renderDB(){
       <td>${e.os}</td>
       <td style="font-family:'Orbitron',sans-serif;color:var(--crimson);font-size:.85rem;font-weight:600">${e.ip || '—'}</td>
       <td style="font-size:.82rem;color:var(--muted)">${e.location || '—'}</td>
+      <td style="font-size:.78rem;color:var(--gold2)">${e.isp || '—'}</td>
+      <td style="font-size:.78rem;color:var(--dim)">${e.timezone || '—'}</td>
       <td>${e.screen}</td>
     </tr>
   `).join('');
